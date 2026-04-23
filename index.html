@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medieval Capitalist</title>
+  <style>
+    :root{
+      --bg:#120f0d;
+      --panel:#211915;
+      --panel-2:#2b211c;
+      --panel-3:#181210;
+      --border:#5c4637;
+      --text:#f3e7d2;
+      --muted:#c5b394;
+      --accent:#b88949;
+      --accent-2:#7dff9b;
+      --danger:#b3473c;
+      --warning:#d8aa57;
+      --shadow:rgba(0,0,0,.35);
+      --overlay:rgba(5,4,4,.72);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top, #2b231d 0%, #120f0d 45%),
+        linear-gradient(180deg, #1b1511, #0f0c0a);
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    button{font-family:inherit}
+
+    .app{
+      display:flex;
+      height:100vh;
+      width:100%;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .sidebar{
+      width:320px;
+      min-width:320px;
+      background:linear-gradient(180deg, rgba(48,35,28,.98), rgba(26,19,15,.98));
+      border-right:2px solid var(--border);
+      box-shadow:8px 0 20px var(--shadow);
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      transition:transform .25s ease;
+      z-index:5;
+    }
+    .sidebar.collapsed{transform:translateX(-284px)}
+
+    .sidebar-toggle{
+      position:absolute;
+      left:320px;
+      top:16px;
+      z-index:8;
+      width:36px;
+      height:48px;
+      border:none;
+      background:linear-gradient(180deg, #4a362c, #281d18);
+      color:var(--text);
+      border-radius:0 10px 10px 0;
+      border:2px solid var(--border);
+      border-left:none;
+      cursor:pointer;
+      font-size:18px;
+      transition:left .25s ease, background .2s ease;
+    }
+    .sidebar.collapsed + .sidebar-toggle{left:36px}
+    .sidebar-toggle:hover{background:linear-gradient(180deg,#5b4335,#33251e)}
+
+    .panel{
+      background:linear-gradient(180deg, var(--panel), var(--panel-3));
+      border:2px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      box-shadow:0 6px 16px var(--shadow);
+    }
+    .panel h2,.panel h3,.panel h4{margin:0 0 8px 0;letter-spacing:.3px}
+    .resource-title{font-size:28px;color:#ffd9a3}
+    .small{color:var(--muted);font-size:14px}
+    .tiny{color:var(--muted);font-size:12px}
+    .stat-row{display:flex;justify-content:space-between;gap:10px;margin:6px 0;font-size:15px}
+
+    .fixed-section{flex:0 0 auto}
+    .scroll-units{
+      flex:1 1 auto;
+      min-height:0;
+      overflow:auto;
+      padding-right:2px;
+    }
+
+    .upgrade-btn,.unit-btn,.resource-btn,.ad-btn,.danger-btn,.secondary-btn,.skill-btn,.reset-btn{
+      width:100%;
+      border:none;
+      cursor:pointer;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      color:var(--text);
+      background:linear-gradient(180deg, #5a4031, #34241c);
+      border:2px solid var(--border);
+      text-align:left;
+      transition:transform .08s ease, filter .2s ease, opacity .2s ease;
+    }
+    .upgrade-btn:hover,.unit-btn:hover,.resource-btn:hover,.ad-btn:hover,.danger-btn:hover,.secondary-btn:hover,.skill-btn:hover,.reset-btn:hover{filter:brightness(1.08)}
+    .upgrade-btn:active,.unit-btn:active,.resource-btn:active,.ad-btn:active,.danger-btn:active,.secondary-btn:active,.skill-btn:active,.reset-btn:active{transform:scale(.985)}
+    .btn-title{font-size:16px;font-weight:bold}
+    .btn-desc{font-size:13px;color:var(--muted);margin-top:3px}
+    .locked{opacity:.45;cursor:not-allowed}
+    .danger-btn,.reset-btn{background:linear-gradient(180deg,#6a2f28,#3d1713);border-color:#87473e}
+    .secondary-btn{background:linear-gradient(180deg,#4a3e36,#261f1b)}
+
+    .main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+    .topbar{
+      display:flex;
+      gap:10px;
+      padding:12px;
+      border-bottom:2px solid var(--border);
+      background:rgba(23,16,13,.75);
+      backdrop-filter:blur(4px);
+      align-items:stretch;
+    }
+    .top-stat{
+      flex:1;
+      min-width:0;
+      background:linear-gradient(180deg, #261c17, #181210);
+      border:2px solid var(--border);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .top-stat .label{color:var(--muted);font-size:13px}
+    .top-stat .value{font-size:22px;font-weight:bold;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .topbar-actions{display:flex;gap:8px;align-items:stretch}
+    .topbar-actions button{width:auto;min-width:140px;text-align:center;margin-top:0}
+
+    .content{
+      flex:1;
+      display:grid;
+      grid-template-columns:1fr 290px;
+      gap:12px;
+      padding:12px;
+      min-height:0;
+    }
+
+     .click-area{
+      min-height:0;
+      background:
+      linear-gradient(rgba(18,15,13,.28), rgba(18,15,13,.38)),
+      url("assets/background_1.png") center center / cover no-repeat;
+      border:2px solid var(--border);
+      border-radius:18px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 8px 20px var(--shadow);
+    }
+    }
+    .scene-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 75%, rgba(90,255,120,.07), transparent 18%),radial-gradient(circle at 78% 24%, rgba(255,180,90,.06), transparent 22%)}
+    .scene-overlay-event{position:absolute;inset:0;pointer-events:none;opacity:.22}
+    .event-mice{background:radial-gradient(circle at 10% 20%, rgba(130,255,130,.22), transparent 16%),radial-gradient(circle at 40% 80%, rgba(130,255,130,.18), transparent 15%),radial-gradient(circle at 78% 32%, rgba(130,255,130,.18), transparent 13%)}
+    .event-rebellion{background:radial-gradient(circle at 25% 25%, rgba(255,80,80,.24), transparent 22%),radial-gradient(circle at 80% 70%, rgba(255,120,80,.20), transparent 18%)}
+    .event-mages{background:radial-gradient(circle at 25% 25%, rgba(160,100,255,.25), transparent 19%),radial-gradient(circle at 75% 75%, rgba(160,100,255,.18), transparent 20%)}
+    .event-golden{background:radial-gradient(circle at 50% 20%, rgba(255,220,90,.30), transparent 24%),radial-gradient(circle at 30% 75%, rgba(255,220,90,.12), transparent 18%)}
+
+    .click-label{position:absolute;top:18px;text-align:center;z-index:2}
+    .click-label .name{font-size:36px;font-weight:bold;color:#ffd9a3;text-transform:uppercase}
+    .click-label .sub{font-size:14px;color:var(--muted)}
+
+    .resource-button{
+  width:min(72vw, 560px);
+  height:min(72vw, 560px);
+  max-width:560px;
+  max-height:560px;
+  min-width:300px;
+  min-height:300px;
+  border:none;
+  border-radius:0;
+  background:none;
+  box-shadow:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  position:relative;
+  z-index:2;
+  user-select:none;
+  overflow:visible;
+  transition:transform .08s ease, filter .15s ease;
+}
+.resource-img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+  display:block;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,0.45));
+}
+.resource-button:hover{filter:brightness(1.05)}
+.resource-button:active{transform:scale(.96)}
+.resource-button.stone{background:none}
+.resource-button.iron{background:none}
+
+    .click-power{margin-top:18px;z-index:2;text-align:center;font-size:18px}
+    .event-indicator{
+      position:absolute;
+      right:16px;
+      top:16px;
+      z-index:3;
+      min-width:86px;
+      border-radius:12px;
+      border:2px solid var(--border);
+      background:rgba(25,18,16,.9);
+      padding:8px 10px;
+      text-align:center;
+      box-shadow:0 6px 16px var(--shadow);
+    }
+    .event-indicator.hidden{display:none}
+    .event-indicator .icon{font-size:24px;line-height:1}
+    .event-indicator .name{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .workers{
+      background:linear-gradient(180deg, var(--panel), var(--panel-3));
+      border:2px solid var(--border);
+      border-radius:18px;
+      padding:12px;
+      overflow:auto;
+      box-shadow:0 8px 20px var(--shadow);
+    }
+.secretary{
+  background:linear-gradient(180deg, #32241d, #201713);
+  border:2px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+}
+.secretary-head{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.secretary-icon{
+  width:170px;
+  height:170px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg, rgba(76,56,46,.35), rgba(36,25,20,.15));
+  border:none;
+  padding:0;
+  flex-shrink:0;
+}
+.secretary-img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,0.6));
+}
+.secretary-info{
+  text-align:center;
+}
+.speech{
+  background:#16100d;
+  border:2px solid #4e3d31;
+  color:var(--muted);
+  border-radius:12px;
+  padding:10px;
+  font-size:14px;
+  line-height:1.3;
+  min-height:78px;
+}
+.boost-active{margin-top:8px;color:var(--accent-2);font-size:13px}
+
+@media (max-width: 760px){
+  .secretary-icon{
+    width:120px;
+    height:120px;
+  }
+}
+
+    .bottom-resources{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    .resource-btn{text-align:center;padding:12px 8px;font-weight:bold}
+    .resource-btn.active{outline:2px solid #d9a86a;color:#ffd9a3}
+
+    .floating-text{position:absolute;font-weight:bold;color:#fff2d9;text-shadow:0 2px 6px rgba(0,0,0,.55);pointer-events:none;animation:floatUp .9s ease forwards;z-index:10}
+    @keyframes floatUp{
+      0%{opacity:0;transform:translateY(10px) scale(.9)}
+      10%{opacity:1}
+      100%{opacity:0;transform:translateY(-55px) scale(1.05)}
+    }
+
+    .save-toast{
+      position:absolute;
+      top:18px;
+      left:50%;
+      transform:translateX(-50%) translateY(-12px);
+      z-index:30;
+      background:rgba(24,18,16,.95);
+      border:2px solid var(--border);
+      border-radius:12px;
+      padding:10px 16px;
+      color:#ffe8c3;
+      box-shadow:0 8px 18px var(--shadow);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .25s ease, transform .25s ease;
+    }
+    .save-toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .overlay{
+      position:absolute;
+      inset:0;
+      background:var(--overlay);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+      padding:18px;
+    }
+    .overlay.show{display:flex}
+
+    .modal{
+      width:min(720px, 100%);
+      max-height:92vh;
+      overflow:auto;
+      background:linear-gradient(180deg, #2a201b, #15110f);
+      border:2px solid var(--border);
+      border-radius:20px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      padding:18px;
+      position:relative;
+    }
+    .modal h2,.modal h3{margin:0 0 8px 0}
+    .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .modal-box{background:rgba(19,14,12,.75);border:2px solid #4f3d32;border-radius:14px;padding:12px}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+    .modal-actions button{width:auto;min-width:150px;margin-top:0;text-align:center}
+    .warning-line{margin-top:10px;color:#efc8b5;font-size:13px}
+
+    .center-intro{
+      width:min(620px, 100%);
+      text-align:center;
+    }
+    .center-secretary{
+      margin:0 auto 14px auto;
+      width:120px;
+      height:120px;
+      border-radius:24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:64px;
+      background:linear-gradient(180deg,#4e392f,#241813);
+      border:3px solid var(--border);
+      box-shadow:0 10px 24px var(--shadow);
+    }
+
+    .skill-tree-wrap{margin-top:14px}
+    .skill-tree{
+      position:relative;
+      display:grid;
+      grid-template-columns:repeat(5, minmax(90px, 1fr));
+      grid-template-rows:repeat(5, 94px);
+      gap:10px;
+      margin-top:12px;
+    }
+    .skill-cell{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .skill-btn{
+      height:88px;
+      margin-top:0;
+      text-align:center;
+      padding:8px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:4px;
+      background:linear-gradient(180deg,#443126,#261b17);
+    }
+    .skill-btn .btn-title{font-size:14px}
+    .skill-btn .btn-desc{font-size:11px;margin-top:0}
+    .skill-btn.locked-node{opacity:.35;cursor:not-allowed}
+    .skill-btn.available{box-shadow:0 0 0 2px rgba(216,170,87,.35)}
+    .skill-btn.bought{background:linear-gradient(180deg,#6b5236,#3a2c20);box-shadow:0 0 0 2px rgba(125,255,155,.25)}
+    .skill-tree-lines{position:absolute;inset:0;pointer-events:none}
+
+    @media (max-width: 980px){
+      .content{grid-template-columns:1fr}
+      .workers{max-height:34vh}
+    }
+    @media (max-width: 760px){
+      .sidebar{width:290px;min-width:290px}
+      .sidebar.collapsed{transform:translateX(-254px)}
+      .sidebar-toggle{left:290px}
+      .sidebar.collapsed + .sidebar-toggle{left:36px}
+      .topbar{flex-wrap:wrap}
+      .top-stat{min-width:calc(50% - 5px)}
+      .topbar-actions{width:100%}
+      .topbar-actions button{flex:1}
+      .click-label .name{font-size:28px}
+      .resource-button{min-width:210px;min-height:210px;font-size:90px}
+      .skill-tree{grid-template-columns:repeat(3, minmax(90px, 1fr));grid-auto-rows:92px}
+      .modal-grid{grid-template-columns:1fr}
+    }
+      .music-control{
+      position:absolute;
+      top:10px;
+      right:10px;
+      z-index:100;
+    }
+
+    #musicBtn{
+      width:50px;
+      height:50px;
+      border-radius:12px;
+      border:2px solid var(--border);
+      background:linear-gradient(180deg,#4a362c,#281d18);
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    #musicBtn:hover{
+      filter:brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="save-toast" id="saveToast">Gra zapisana</div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="fixed-section panel">
+        <h2 class="resource-title" id="leftResourceName">Drewno</h2>
+        <div class="small">Ponury surowiec z ogromnym potencjałem wzrostu.</div>
+        <div class="stat-row"><span>Ilość</span><strong id="leftAmount">0</strong></div>
+        <div class="stat-row"><span>Na sekundę</span><strong id="leftPerSecond">0/s</strong></div>
+        <div class="stat-row"><span>Siła kliku</span><strong id="leftClickPower">1</strong></div>
+        <div class="stat-row"><span>Poziom materiału</span><strong id="leftMaterialLevel">1</strong></div>
+        <div class="stat-row"><span>Poziom kliku</span><strong id="leftClickLevel">1</strong></div>
+      </div>
+
+      <div class="fixed-section panel">
+        <h3>Ulepszenia</h3>
+        <button class="upgrade-btn" id="materialBtn" type="button">
+          <div class="btn-title">⚒️ Ulepsz materiał</div>
+          <div class="btn-desc">+50% do wydobycia tego surowca</div>
+          <div class="btn-desc" id="materialBtnCost">Koszt: 1 000</div>
+        </button>
+
+        <button class="upgrade-btn" id="clickBtn" type="button">
+          <div class="btn-title">👆 Ulepsz klik</div>
+          <div class="btn-desc">+50% do siły kliku tego surowca</div>
+          <div class="btn-desc" id="clickBtnCost">Koszt: 100</div>
+        </button>
+      </div>
+
+      <div class="panel scroll-units">
+        <h3>Zakup jednostek</h3>
+        <div id="unitsList"></div>
+      </div>
+
+      <div class="fixed-section panel">
+        <h4>Surowce</h4>
+        <div class="tiny">Nowe surowce odblokowujesz po zapłaceniu wymaganej kwoty.</div>
+        <div class="bottom-resources">
+          <button class="resource-btn active" id="btnWood" type="button">🪵 Drewno</button>
+          <button class="resource-btn locked" id="btnStone" type="button">🔒 Kamień</button>
+          <button class="resource-btn locked" id="btnIron" type="button">🔒 Żelazo</button>
+        </div>
+      </div>
+    </aside>
+
+    <button class="sidebar-toggle" id="sidebarToggle" type="button">◀</button>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="top-stat">
+          <div class="label">Surowiec</div>
+          <div class="value" id="topResource">Drewno</div>
+        </div>
+        <div class="top-stat">
+          <div class="label">Ilość</div>
+          <div class="value" id="topAmount">0</div>
+        </div>
+        <div class="top-stat">
+          <div class="label">Na sekundę</div>
+          <div class="value" id="topPerSecond">0/s</div>
+        </div>
+        <div class="top-stat">
+          <div class="label">Boost sekretarki</div>
+          <div class="value" id="topBoost">Brak</div>
+        </div>
+        <div class="top-stat">
+          <div class="label">Dusze</div>
+          <div class="value" id="topSouls">0</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="reset-btn locked" id="resetImperiumBtn" type="button">Reset niedostępny</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <section class="click-area" id="clickArea">
+          <div class="scene-bg"></div>
+          <div class="scene-overlay-event" id="eventOverlay"></div>
+
+          <div class="click-label">
+            <div class="name" id="centerName">DREWNO</div>
+            <div class="sub">Klikaj dla zysku i moralnego upadku</div>
+          </div>
+
+          <div class="event-indicator hidden" id="eventIndicator">
+            <div class="icon" id="eventIndicatorIcon"></div>
+            <div class="name" id="eventIndicatorName"></div>
+          </div>
+
+          <div class="resource-button wood" id="resourceButton">
+           <img src="assets/wood_1.png" alt="Drewno" class="resource-img" id="resourceImage">
+          </div>
+          <div class="click-power">
+            Klik: <strong id="centerClickPower">1</strong>
+          </div>
+        </section>
+
+        <aside class="workers">
+<div class="secretary">
+  <div class="secretary-head">
+    <div class="secretary-icon">
+      <img src="assets/secretary_1.png" alt="Szkielet Sekretarka" class="secretary-img">
+    </div>
+    <div class="secretary-info">
+      <strong>Szkielet Sekretarka</strong><br>
+      <span class="small">Grupa robocza</span>
+    </div>
+  </div>
+
+  <div class="speech" id="speechBox">
+    Świetna robota! Twoje imperium rośnie, a pracownicy... cóż, robią co mogą.
+  </div>
+
+  <button class="ad-btn" id="adBoostBtn" type="button">
+    <div class="btn-title">📺 Zwiększ efektywność o 50% na 1 godzinę</div>
+    <div class="btn-desc">Na razie symulacja reklamy — klik aktywuje bonus</div>
+  </button>
+
+  <div class="boost-active" id="boostTimer"></div>
+</div>
+
+          <div class="panel">
+            <h3>Notatka zarządu</h3>
+            <div class="small">
+              Każdy surowiec ma osobny progres: osobne jednostki, poziom materiału, poziom kliku i ilość.
+            </div>
+            <div class="small" style="margin-top:8px;">
+              Drzewko umiejętności otwiera się wyłącznie po resecie. Niewydane dusze czekają do kolejnego resetu.
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <div class="overlay" id="prestigeIntroOverlay">
+      <div class="modal center-intro">
+        <div class="center-secretary">💀</div>
+        <h2>Nowa możliwość</h2>
+        <p class="small" id="prestigeIntroText">
+          Gratulacje. Możemy teraz wszystko zresetować i udawać, że to był plan.
+        </p>
+        <div class="modal-actions" style="justify-content:center;">
+          <button class="secondary-btn" id="prestigeIntroLaterBtn" type="button">Może później</button>
+          <button class="danger-btn" id="prestigeIntroOpenBtn" type="button">Pokaż reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="resetOverlay">
+      <div class="modal">
+        <h2>Reset Imperium</h2>
+        <p class="small">Każdy rozsądny kapitalista wie, kiedy spalić firmę i sprzedać popiół.</p>
+
+        <div class="modal-grid">
+          <div class="modal-box">
+            <h3>Otrzymasz po resecie</h3>
+            <div class="resource-title" id="resetSoulsGain">0 Dusz</div>
+            <div class="small">Dusze wykorzystasz w drzewku umiejętności po zatwierdzeniu resetu.</div>
+          </div>
+          <div class="modal-box">
+            <h3>Utracisz</h3>
+            <div class="small">- wszystkie surowce</div>
+            <div class="small">- wszystkie jednostki</div>
+            <div class="small">- wszystkie ulepszenia materiału</div>
+            <div class="small">- wszystkie ulepszenia kliku</div>
+            <div class="small">- aktywny boost sekretarki</div>
+          </div>
+        </div>
+
+        <div class="modal-box" style="margin-top:12px;">
+          <h3>Opcja dodatkowa</h3>
+          <div class="small">Możesz zresetować drzewko umiejętności podczas tego resetu, oglądając reklamę.</div>
+          <button class="ad-btn" id="resetTreeAdBtn" type="button">
+            <div class="btn-title">📺 Zresetuj drzewko umiejętności</div>
+            <div class="btn-desc">Symulacja reklamy. Zwróci wszystkie wydane dusze i wyczyści build.</div>
+          </button>
+          <div class="small" id="resetTreeStatus">Drzewko pozostanie bez zmian.</div>
+        </div>
+
+        <div class="warning-line">Ta operacja nie może zostać cofnięta.</div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="closeResetBtn" type="button">Anuluj</button>
+          <button class="danger-btn" id="confirmResetBtn" type="button">Potwierdź reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="eventOverlayModal">
+      <div class="modal">
+        <h2 id="eventModalTitle">Wydarzenie</h2>
+        <p class="small" id="eventModalFlavor"></p>
+        <div class="modal-grid">
+          <div class="modal-box">
+            <h3>Efekty</h3>
+            <div id="eventEffects"></div>
+          </div>
+          <div class="modal-box">
+            <h3>Indykator</h3>
+            <div style="font-size:54px;text-align:center;" id="eventVisualIcon">🐭</div>
+            <div class="small" style="text-align:center;" id="eventVisualText"></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="acceptEventBtn" type="button">Gram z tym</button>
+          <button class="ad-btn" id="removeEventBtn" type="button">Usuń wydarzenie (📺)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="skillTreeOverlay">
+      <div class="modal">
+        <h2>Drzewko Umiejętności</h2>
+        <p class="small">Wydaj dusze teraz. Po zamknięciu drzewka wrócisz do gry i nie otworzysz go ponownie aż do kolejnego resetu.</p>
+        <div class="modal-box" style="margin-top:12px;">
+          <div class="stat-row"><span>Dostępne dusze</span><strong id="skillSoulsAvailable">0</strong></div>
+          <div class="small">Niewydane dusze nie znikają, ale poczekają do kolejnego resetu. To jedyne okno wejścia do drzewka w tym runie.</div>
+        </div>
+        <div class="skill-tree-wrap">
+          <div class="skill-tree" id="skillTree"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="closeSkillTreeBtn" type="button">Zamknij drzewko</button>
+        </div>
+      </div>
+    </div>
+    <!-- MUSIC -->
+<div class="music-control">
+  <button id="musicBtn">🔊</button>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
+  </div>
+
+  <script>
+    const SAVE_KEY = "medieval_capitalist_save_v3";
+
+    const UNIT_DEFS = [
+      { key: "mouse", name: "Mysz", icon: "🐭", baseCost: 25, baseRate: 0.1, desc: "+0.1/s" },
+      { key: "crow", name: "Wrona", icon: "🐦‍⬛", baseCost: 100, baseRate: 1, desc: "+1/s" },
+      { key: "skeleton", name: "Szkielet", icon: "💀", baseCost: 250, baseRate: 5, desc: "+5/s" },
+      { key: "mage", name: "Szkielet Mag", icon: "🧙", baseCost: 5000, baseRate: 10, desc: "+10/s" },
+      { key: "deathKnight", name: "Rycerz Śmierci", icon: "🛡️", baseCost: 50000, baseRate: 50, desc: "+50/s" },
+      { key: "minotaur", name: "Minotaur Szkielet", icon: "🐂", baseCost: 250000, baseRate: 100, desc: "+100/s" },
+      { key: "dragon", name: "Smok", icon: "🐉", baseCost: 1000000, baseRate: 250, desc: "+250/s" }
+    ];
+
+    const RESOURCE_DEFS = {
+      wood: { key: "wood", name: "Drewno", icon: "🪵", unlockCost: 0, unlockFrom: null },
+      stone: { key: "stone", name: "Kamień", icon: "🪨", unlockCost: 250000, unlockFrom: "wood" },
+      iron: { key: "iron", name: "Żelazo", icon: "⛓️", unlockCost: 250000, unlockFrom: "stone" }
+    };
+
+    const secretaryLines = [
+      "Świetna robota! Twoje imperium rośnie, a pracownicy... cóż, robią co mogą.",
+      "Produktywność wzrosła. Morale pozostaje tajemnicą.",
+      "Wszyscy są zachwyceni. Przynajmniej ci, którzy jeszcze mówią.",
+      "Zysk rośnie szybciej niż liczba dostępnych kręgosłupów.",
+      "Rynek kocha odważnych. Twoi poddani wolą nie komentować.",
+      "To nie wyzysk. To bardzo intensywna współpraca."
+    ];
+
+    const EVENTS = {
+      micePlague: {
+        key: "micePlague",
+        name: "Plaga Myszy",
+        icon: "🐭",
+        overlayClass: "event-mice",
+        flavor: "Twoje imperium zostało opanowane przez myszy. Są niezwykle wydajne, ale reszta kadry nie podziela ich entuzjazmu.",
+        effects: ["Myszy x10", "Pozostałe jednostki -50%"],
+        unitModifiers: { mouse: 10 },
+        otherUnitsMultiplier: 0.5,
+        soulsMultiplier: 1
+      },
+      rebellion: {
+        key: "rebellion",
+        name: "Rebelia",
+        icon: "🔥",
+        overlayClass: "event-rebellion",
+        flavor: "Kadra buntuje się przeciw warunkom pracy. Koszty spadają, ale nikt nie daje z siebie pełni potencjału.",
+        effects: ["Koszt jednostek -50%", "Produkcja wszystkich jednostek -30%"],
+        unitCostMultiplier: 0.5,
+        allProductionMultiplier: 0.7,
+        soulsMultiplier: 1
+      },
+      mageControl: {
+        key: "mageControl",
+        name: "Magowie przejmują kontrolę",
+        icon: "✨",
+        overlayClass: "event-mages",
+        flavor: "Magiczna administracja przejęła odpowiedzialność za proces produkcyjny. Magowie błyszczą, reszta woli się schować.",
+        effects: ["Szkielet Mag x5", "Pozostałe jednostki -30%"],
+        unitModifiers: { mage: 5 },
+        otherUnitsMultiplier: 0.7,
+        soulsMultiplier: 1
+      },
+      goldenAge: {
+        key: "goldenAge",
+        name: "Złoty Wiek",
+        icon: "👑",
+        overlayClass: "event-golden",
+        flavor: "Wszystko idzie podejrzanie dobrze. Jest tylko jeden haczyk: duchowy zwrot z inwestycji będzie mniejszy.",
+        effects: ["Cała produkcja +50%", "Dusze z resetu -50%"],
+        allProductionMultiplier: 1.5,
+        soulsMultiplier: 0.5
+      }
+    };
+
+    const SKILL_NODES = [
+      { id: "wiseCapitalist", name: "Mądry Kapitalista", cost: 1, desc: "x2 dusze przy każdym resecie", effect: "doubleSouls", pos: [2,2], requires: [] },
+      { id: "betterOrganization", name: "Lepsza Organizacja", cost: 1, desc: "+25% produkcji", effect: "prod25", pos: [2,1], requires: ["wiseCapitalist"] },
+      { id: "massExploitation", name: "Masowa Eksploatacja", cost: 1, desc: "+50% produkcji", effect: "prod50", pos: [2,0], requires: ["betterOrganization"] },
+      { id: "inhumanEfficiency", name: "Nieludzka Wydajność", cost: 1, desc: "+100% produkcji", effect: "prod100", pos: [2,-1], requires: ["massExploitation"] },
+      { id: "strongHand", name: "Silna Ręka", cost: 1, desc: "+50% kliku", effect: "click50", pos: [3,2], requires: ["wiseCapitalist"] },
+      { id: "ironStrike", name: "Żelazne Uderzenie", cost: 1, desc: "+100% kliku", effect: "click100", pos: [4,2], requires: ["strongHand"] },
+      { id: "divineClick", name: "Boski Klik", cost: 1, desc: "klik x3", effect: "click300", pos: [5,2], requires: ["ironStrike"] },
+      { id: "betterStart", name: "Lepszy Początek", cost: 1, desc: "startujesz z 100 drewna", effect: "start100", pos: [1,2], requires: ["wiseCapitalist"] },
+      { id: "acceleratedStart", name: "Przyspieszony Start", cost: 1, desc: "startujesz z +5/s", effect: "startPs5", pos: [0,2], requires: ["betterStart"] },
+      { id: "readyInfrastructure", name: "Gotowa Infrastruktura", cost: 1, desc: "startujesz z 1 Wroną", effect: "startCrow", pos: [-1,2], requires: ["acceleratedStart"] },
+      { id: "workerMotivation", name: "Motywacja Pracowników", cost: 1, desc: "boost z reklamy +75%", effect: "ad75", pos: [2,3], requires: ["wiseCapitalist"] },
+      { id: "ruthlessProductivity", name: "Bezwzględna Produktywność", cost: 1, desc: "boost z reklamy +100%", effect: "ad100", pos: [2,4], requires: ["workerMotivation"] },
+      { id: "eternalMotivation", name: "Wieczna Motywacja", cost: 1, desc: "boost reklamowy trwa 2x dłużej", effect: "adDuration2x", pos: [2,5], requires: ["ruthlessProductivity"] }
+    ];
+
+    function createResourceState() {
+      const units = {};
+      UNIT_DEFS.forEach(u => units[u.key] = { owned: 0 });
+      return {
+        amount: 0,
+        materialLevel: 1,
+        materialCost: 1000,
+        clickLevel: 1,
+        clickCost: 100,
+        units,
+        unlocked: false,
+        lifetimeCollected: 0
+      };
+    }
+
+    function createNewGame() {
+      return {
+        currentResource: "wood",
+        resources: {
+          wood: { ...createResourceState(), unlocked: true },
+          stone: createResourceState(),
+          iron: createResourceState()
+        },
+        souls: 0,
+        spentSouls: 0,
+        skillTreeOpenForCurrentRun: false,
+        hasSeenPrestigeIntro: false,
+        hasHadFirstSoulOpportunity: false,
+        hasPrestigedAtLeastOnce: false,
+        skillTreeUnlocked: false,
+        skillNodesBought: [],
+        secretaryBoostUntil: 0,
+        sidebarCollapsed: false,
+        currentEventKey: null,
+        currentRunIndex: 1,
+        resetTreeOnNextPrestige: false,
+        adBoostUses: 0
+      };
+    }
+
+    let game = createNewGame();
+
+    const el = {
+      sidebar: document.getElementById("sidebar"),
+      sidebarToggle: document.getElementById("sidebarToggle"),
+      saveToast: document.getElementById("saveToast"),
+      leftResourceName: document.getElementById("leftResourceName"),
+      leftAmount: document.getElementById("leftAmount"),
+      leftPerSecond: document.getElementById("leftPerSecond"),
+      leftClickPower: document.getElementById("leftClickPower"),
+      leftMaterialLevel: document.getElementById("leftMaterialLevel"),
+      leftClickLevel: document.getElementById("leftClickLevel"),
+      materialBtn: document.getElementById("materialBtn"),
+      materialBtnCost: document.getElementById("materialBtnCost"),
+      clickBtn: document.getElementById("clickBtn"),
+      clickBtnCost: document.getElementById("clickBtnCost"),
+      unitsList: document.getElementById("unitsList"),
+      btnWood: document.getElementById("btnWood"),
+      btnStone: document.getElementById("btnStone"),
+      btnIron: document.getElementById("btnIron"),
+      topResource: document.getElementById("topResource"),
+      topAmount: document.getElementById("topAmount"),
+      topPerSecond: document.getElementById("topPerSecond"),
+      topBoost: document.getElementById("topBoost"),
+      topSouls: document.getElementById("topSouls"),
+      resetImperiumBtn: document.getElementById("resetImperiumBtn"),
+      centerName: document.getElementById("centerName"),
+      centerClickPower: document.getElementById("centerClickPower"),
+      resourceButton: document.getElementById("resourceButton"),
+      clickArea: document.getElementById("clickArea"),
+      speechBox: document.getElementById("speechBox"),
+      adBoostBtn: document.getElementById("adBoostBtn"),
+      boostTimer: document.getElementById("boostTimer"),
+      eventOverlay: document.getElementById("eventOverlay"),
+      eventIndicator: document.getElementById("eventIndicator"),
+      eventIndicatorIcon: document.getElementById("eventIndicatorIcon"),
+      eventIndicatorName: document.getElementById("eventIndicatorName"),
+      prestigeIntroOverlay: document.getElementById("prestigeIntroOverlay"),
+      prestigeIntroText: document.getElementById("prestigeIntroText"),
+      prestigeIntroLaterBtn: document.getElementById("prestigeIntroLaterBtn"),
+      prestigeIntroOpenBtn: document.getElementById("prestigeIntroOpenBtn"),
+      resetOverlay: document.getElementById("resetOverlay"),
+      resetSoulsGain: document.getElementById("resetSoulsGain"),
+      resetTreeAdBtn: document.getElementById("resetTreeAdBtn"),
+      resetTreeStatus: document.getElementById("resetTreeStatus"),
+      closeResetBtn: document.getElementById("closeResetBtn"),
+      confirmResetBtn: document.getElementById("confirmResetBtn"),
+      eventOverlayModal: document.getElementById("eventOverlayModal"),
+      eventModalTitle: document.getElementById("eventModalTitle"),
+      eventModalFlavor: document.getElementById("eventModalFlavor"),
+      eventEffects: document.getElementById("eventEffects"),
+      eventVisualIcon: document.getElementById("eventVisualIcon"),
+      eventVisualText: document.getElementById("eventVisualText"),
+      acceptEventBtn: document.getElementById("acceptEventBtn"),
+      removeEventBtn: document.getElementById("removeEventBtn"),
+      skillTreeOverlay: document.getElementById("skillTreeOverlay"),
+      skillSoulsAvailable: document.getElementById("skillSoulsAvailable"),
+      skillTree: document.getElementById("skillTree"),
+      closeSkillTreeBtn: document.getElementById("closeSkillTreeBtn")
+    };
+
+    function formatNumber(value) {
+      if (!isFinite(value)) return "0";
+      if (value < 1000) {
+        if (Math.abs(value - Math.round(value)) < 0.001) return String(Math.round(value));
+        return value.toFixed(1);
+      }
+      const units = ["K", "M", "B", "T", "Qa", "Qi"];
+      let num = value;
+      let unitIndex = -1;
+      while (num >= 1000 && unitIndex < units.length - 1) {
+        num /= 1000;
+        unitIndex++;
+      }
+      return num.toFixed(num >= 100 ? 0 : num >= 10 ? 1 : 2) + units[unitIndex];
+    }
+
+    function getCurrentState() { return game.resources[game.currentResource]; }
+    function hasSkill(id) { return game.skillNodesBought.includes(id); }
+    function getCurrentEvent() { return game.currentEventKey ? EVENTS[game.currentEventKey] : null; }
+
+    function getMilestoneMultiplier(owned) {
+      let m = 1;
+      [10,25,50,100,200,500].forEach(bp => { if (owned >= bp) m *= 2; });
+      return m;
+    }
+
+    function getPrestigeSoulMultiplier() {
+      return hasSkill("wiseCapitalist") ? 2 : 1;
+    }
+
+    function getProductionSkillMultiplier() {
+      let m = 1;
+      if (hasSkill("betterOrganization")) m *= 1.25;
+      if (hasSkill("massExploitation")) m *= 1.5;
+      if (hasSkill("inhumanEfficiency")) m *= 2;
+      return m;
+    }
+
+    function getClickSkillMultiplier() {
+      let m = 1;
+      if (hasSkill("strongHand")) m *= 1.5;
+      if (hasSkill("ironStrike")) m *= 2;
+      if (hasSkill("divineClick")) m *= 3;
+      return m;
+    }
+
+    function getAdBoostMultiplier() {
+      if (hasSkill("ruthlessProductivity")) return 2;
+      if (hasSkill("workerMotivation")) return 1.75;
+      return 1.5;
+    }
+
+    function getAdBoostDurationMs() {
+      return hasSkill("eternalMotivation") ? 2 * 60 * 60 * 1000 : 60 * 60 * 1000;
+    }
+
+    function getUnitCost(unitKey, owned) {
+      const def = UNIT_DEFS.find(u => u.key === unitKey);
+      let base = def.baseCost * Math.pow(1.2, owned);
+      const ev = getCurrentEvent();
+      if (ev && ev.unitCostMultiplier) base *= ev.unitCostMultiplier;
+      return Math.max(1, Math.floor(base));
+    }
+
+    function getSecretaryBoostMultiplier() {
+      return Date.now() < game.secretaryBoostUntil ? getAdBoostMultiplier() : 1;
+    }
+
+    function getMaterialMultiplier(state) { return 1 + (state.materialLevel - 1) * 0.5; }
+    function getClickLevelMultiplier(state) { return 1 + (state.clickLevel - 1) * 0.5; }
+
+    function getUnitEffectiveRate(def, owned) {
+      let rate = def.baseRate * getMilestoneMultiplier(owned);
+      const ev = getCurrentEvent();
+      if (ev) {
+        if (ev.unitModifiers && ev.unitModifiers[def.key]) rate *= ev.unitModifiers[def.key];
+        else if (ev.otherUnitsMultiplier && def.key !== "mouse" && !(ev.unitModifiers && ev.unitModifiers[def.key])) rate *= ev.otherUnitsMultiplier;
+        if (ev.key === "mageControl" && def.key !== "mage" && !(ev.unitModifiers && ev.unitModifiers[def.key])) rate *= 1; 
+        if (ev.allProductionMultiplier) rate *= ev.allProductionMultiplier;
+      }
+      return rate;
+    }
+
+    function getProductionForResource(resourceKey) {
+      const state = game.resources[resourceKey];
+      let total = 0;
+      UNIT_DEFS.forEach(def => {
+        const owned = state.units[def.key].owned;
+        total += owned * getUnitEffectiveRate(def, owned);
+      });
+      total *= getMaterialMultiplier(state);
+      total *= getSecretaryBoostMultiplier();
+      total *= getProductionSkillMultiplier();
+      return total;
+    }
+
+    function getClickPowerForResource(resourceKey) {
+      const state = game.resources[resourceKey];
+      let click = 1;
+      click *= getClickLevelMultiplier(state);
+      click *= getSecretaryBoostMultiplier();
+      click *= getClickSkillMultiplier();
+      return click;
+    }
+
+    function getTotalLifetimeCollected() {
+      return Object.values(game.resources).reduce((sum, r) => sum + (r.lifetimeCollected || 0), 0);
+    }
+
+    function calculateSoulsGain() {
+      const total = getTotalLifetimeCollected();
+      let souls = Math.floor(Math.sqrt(total / 100000));
+      souls *= getPrestigeSoulMultiplier();
+      const ev = getCurrentEvent();
+      if (ev && ev.soulsMultiplier) souls = Math.floor(souls * ev.soulsMultiplier);
+      return Math.max(0, souls);
+    }
+
+    function canShowPrestigeSystem() {
+      return calculateSoulsGain() >= 1;
+    }
+
+    function isUnlocked(resourceKey) {
+      return !!game.resources[resourceKey].unlocked;
+    }
+
+    function unlockResource(resourceKey) {
+      if (resourceKey === "wood") return;
+      const def = RESOURCE_DEFS[resourceKey];
+      const sourceState = game.resources[def.unlockFrom];
+      if (game.resources[resourceKey].unlocked) {
+        setCurrentResource(resourceKey);
+        return;
+      }
+      if (sourceState.amount < def.unlockCost) return;
+      sourceState.amount -= def.unlockCost;
+      game.resources[resourceKey].unlocked = true;
+      setCurrentResource(resourceKey);
+      refreshAllUI();
+    }
+
+    function setCurrentResource(resourceKey) {
+      if (!isUnlocked(resourceKey)) return;
+      game.currentResource = resourceKey;
+      renderUnitsList();
+      refreshAllUI();
+    }
+
+    function buyMaterialUpgrade() {
+      const state = getCurrentState();
+      if (state.amount < state.materialCost) return;
+      state.amount -= state.materialCost;
+      state.materialLevel += 1;
+      state.materialCost = Math.floor(state.materialCost * 3);
+      refreshAllUI();
+    }
+
+    function buyClickUpgrade() {
+      const state = getCurrentState();
+      if (state.amount < state.clickCost) return;
+      state.amount -= state.clickCost;
+      state.clickLevel += 1;
+      state.clickCost = Math.floor(state.clickCost * 3);
+      refreshAllUI();
+    }
+
+    function buyUnit(unitKey) {
+      const state = getCurrentState();
+      const owned = state.units[unitKey].owned;
+      const cost = getUnitCost(unitKey, owned);
+      if (state.amount < cost) return;
+      state.amount -= cost;
+      state.units[unitKey].owned += 1;
+      renderUnitsList();
+      refreshAllUI();
+    }
+
+    function addResource(resourceKey, amount) {
+      const state = game.resources[resourceKey];
+      state.amount += amount;
+      state.lifetimeCollected += amount;
+    }
+
+    function clickResource(event) {
+      const amount = getClickPowerForResource(game.currentResource);
+      addResource(game.currentResource, amount);
+      spawnFloatingText(event, "+" + formatNumber(amount));
+      maybeTriggerPrestigeIntro();
+      refreshAllUI();
+    }
+
+    function spawnFloatingText(event, text) {
+      const rect = el.clickArea.getBoundingClientRect();
+      const x = (event?.clientX ?? rect.left + rect.width / 2) - rect.left;
+      const y = (event?.clientY ?? rect.top + rect.height / 2) - rect.top;
+      const node = document.createElement("div");
+      node.className = "floating-text";
+      node.textContent = text;
+      node.style.left = x + "px";
+      node.style.top = y + "px";
+      el.clickArea.appendChild(node);
+      setTimeout(() => node.remove(), 900);
+    }
+
+    function activateSecretaryBoost() {
+      game.secretaryBoostUntil = Date.now() + getAdBoostDurationMs();
+      rotateSecretaryLine();
+      refreshAllUI();
+    }
+
+    function rotateSecretaryLine() {
+      el.speechBox.textContent = secretaryLines[Math.floor(Math.random() * secretaryLines.length)];
+    }
+
+    function updateResourceButtons() {
+      const map = [
+        { btn: el.btnWood, key: "wood", label: "🪵 Drewno" },
+        { btn: el.btnStone, key: "stone", label: "🪨 Kamień" },
+        { btn: el.btnIron, key: "iron", label: "⛓️ Żelazo" }
+      ];
+      map.forEach(({ btn, key, label }) => {
+        const unlocked = isUnlocked(key);
+        btn.classList.toggle("active", game.currentResource === key);
+        btn.classList.toggle("locked", !unlocked);
+        if (unlocked) btn.textContent = label;
+        else btn.textContent = `🔒 ${RESOURCE_DEFS[key].name} (${formatNumber(RESOURCE_DEFS[key].unlockCost)})`;
+      });
+    }
+
+    function renderUnitsList() {
+      const state = getCurrentState();
+      el.unitsList.innerHTML = "";
+      UNIT_DEFS.forEach(def => {
+        const owned = state.units[def.key].owned;
+        const milestone = getMilestoneMultiplier(owned);
+        const cost = getUnitCost(def.key, owned);
+        const prodPerUnit = getUnitEffectiveRate(def, owned);
+        const totalProd = owned * prodPerUnit;
+        const btn = document.createElement("button");
+        btn.className = "unit-btn";
+        btn.type = "button";
+        btn.dataset.unitKey = def.key;
+        btn.innerHTML = `
+          <div class="btn-title">${def.icon} ${def.name} (<span class="owned">${owned}</span>)</div>
+          <div class="btn-desc">${def.desc}</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">${formatNumber(prodPerUnit)}</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">${formatNumber(totalProd)}</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">${formatNumber(milestone)}</span> | Koszt: <span class="cost">${formatNumber(cost)}</span></div>
+        `;
+        btn.addEventListener("click", () => buyUnit(def.key));
+        el.unitsList.appendChild(btn);
+      });
+    }
+
+    function refreshUnitsValues() {
+      const state = getCurrentState();
+      const buttons = el.unitsList.querySelectorAll(".unit-btn");
+      buttons.forEach(btn => {
+        const def = UNIT_DEFS.find(u => u.key === btn.dataset.unitKey);
+        const owned = state.units[def.key].owned;
+        const milestone = getMilestoneMultiplier(owned);
+        const cost = getUnitCost(def.key, owned);
+        const prodPerUnit = getUnitEffectiveRate(def, owned);
+        const totalProd = owned * prodPerUnit;
+        btn.querySelector(".owned").textContent = owned;
+        btn.querySelector(".perUnit").textContent = formatNumber(prodPerUnit);
+        btn.querySelector(".totalProd").textContent = formatNumber(totalProd);
+        btn.querySelector(".milestone").textContent = formatNumber(milestone);
+        btn.querySelector(".cost").textContent = formatNumber(cost);
+      });
+    }
+
+    function updateBoostTimer() {
+      const now = Date.now();
+      if (now < game.secretaryBoostUntil) {
+        const diff = game.secretaryBoostUntil - now;
+        const totalSec = Math.ceil(diff / 1000);
+        const h = Math.floor(totalSec / 3600);
+        const m = Math.floor((totalSec % 3600) / 60);
+        const s = totalSec % 60;
+        const label = `${h > 0 ? h + "h " : ""}${m}m ${String(s).padStart(2, "0")}s`;
+        el.topBoost.textContent = `${Math.round((getAdBoostMultiplier()-1)*100)}% (${label})`;
+        el.boostTimer.textContent = `Bonus aktywny: jeszcze ${label}`;
+      } else {
+        el.topBoost.textContent = "Brak";
+        el.boostTimer.textContent = "";
+      }
+    }
+
+    function updateEventIndicator() {
+      const ev = getCurrentEvent();
+      el.eventOverlay.className = "scene-overlay-event";
+      if (!ev) {
+        el.eventIndicator.classList.add("hidden");
+        return;
+      }
+      el.eventIndicator.classList.remove("hidden");
+      el.eventIndicatorIcon.textContent = ev.icon;
+      el.eventIndicatorName.textContent = ev.name;
+      el.eventOverlay.classList.add(ev.overlayClass);
+      el.eventIndicator.title = `${ev.name}: ${ev.effects.join(" | ")}`;
+    }
+
+    function updateResetButton() {
+      const souls = calculateSoulsGain();
+      const available = souls >= 1 || game.hasSeenPrestigeIntro;
+      el.resetImperiumBtn.classList.toggle("locked", !available);
+      if (!available) {
+        el.resetImperiumBtn.textContent = "Reset niedostępny";
+      } else {
+        el.resetImperiumBtn.textContent = `Reset Imperium (${souls} Dusz)`;
+      }
+    }
+
+    function refreshAllUI() {
+      const def = RESOURCE_DEFS[game.currentResource];
+      const state = getCurrentState();
+      const production = getProductionForResource(game.currentResource);
+      const clickPower = getClickPowerForResource(game.currentResource);
+
+      el.leftResourceName.textContent = def.name;
+      el.leftAmount.textContent = formatNumber(state.amount);
+      el.leftPerSecond.textContent = formatNumber(production) + "/s";
+      el.leftClickPower.textContent = formatNumber(clickPower);
+      el.leftMaterialLevel.textContent = String(state.materialLevel);
+      el.leftClickLevel.textContent = String(state.clickLevel);
+      el.materialBtnCost.textContent = "Koszt: " + formatNumber(state.materialCost);
+      el.clickBtnCost.textContent = "Koszt: " + formatNumber(state.clickCost);
+      el.topResource.textContent = def.name;
+      el.topAmount.textContent = formatNumber(state.amount);
+      el.topPerSecond.textContent = formatNumber(production) + "/s";
+      el.topSouls.textContent = formatNumber(game.souls - game.spentSouls);
+      el.centerName.textContent = def.name.toUpperCase();
+      el.centerClickPower.textContent = formatNumber(clickPower);
+      el.resourceButton.classList.remove("wood","stone","iron");
+      el.resourceButton.classList.add(def.key);
+      updateResourceButtons();
+      refreshUnitsValues();
+      updateBoostTimer();
+      updateResetButton();
+      updateEventIndicator();
+      el.sidebar.classList.toggle("collapsed", game.sidebarCollapsed);
+      el.sidebarToggle.textContent = game.sidebarCollapsed ? "▶" : "◀";
+    }
+
+    function tick(deltaSeconds) {
+      Object.keys(game.resources).forEach(resourceKey => {
+        const production = getProductionForResource(resourceKey);
+        if (production > 0) addResource(resourceKey, production * deltaSeconds);
+      });
+      maybeTriggerPrestigeIntro();
+    }
+
+    function saveGame(showToast = true) {
+      const payload = JSON.stringify(game);
+      localStorage.setItem(SAVE_KEY, payload);
+      if (showToast) showSaveToast();
+    }
+
+    function showSaveToast() {
+      el.saveToast.classList.add("visible");
+      clearTimeout(showSaveToast._t);
+      showSaveToast._t = setTimeout(() => el.saveToast.classList.remove("visible"), 1300);
+    }
+
+    function loadGame() {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        const fresh = createNewGame();
+        game = { ...fresh, ...parsed };
+        game.resources = {
+          wood: { ...fresh.resources.wood, ...(parsed.resources?.wood || {}) },
+          stone: { ...fresh.resources.stone, ...(parsed.resources?.stone || {}) },
+          iron: { ...fresh.resources.iron, ...(parsed.resources?.iron || {}) }
+        };
+        Object.keys(game.resources).forEach(rk => {
+          UNIT_DEFS.forEach(u => {
+            if (!game.resources[rk].units[u.key]) game.resources[rk].units[u.key] = { owned: 0 };
+          });
+        });
+      } catch (e) {
+        console.error("Błąd wczytywania save:", e);
+      }
+    }
+
+    function maybeTriggerPrestigeIntro() {
+      if (!game.hasSeenPrestigeIntro && !game.hasHadFirstSoulOpportunity && canShowPrestigeSystem()) {
+        game.hasHadFirstSoulOpportunity = true;
+        el.prestigeIntroOverlay.classList.add("show");
+      }
+    }
+
+    function openResetModal() {
+      const souls = calculateSoulsGain();
+      if (souls < 1 && !game.hasSeenPrestigeIntro) return;
+      game.resetTreeOnNextPrestige = false;
+      el.resetTreeStatus.textContent = "Drzewko pozostanie bez zmian.";
+      el.resetSoulsGain.textContent = `${formatNumber(souls)} Dusz`;
+      el.resetOverlay.classList.add("show");
+    }
+
+    function closeResetModal() {
+      el.resetOverlay.classList.remove("show");
+    }
+
+    function openEventModal(eventKey) {
+      const ev = EVENTS[eventKey];
+      el.eventModalTitle.textContent = `Wydarzenie: ${ev.name}`;
+      el.eventModalFlavor.textContent = ev.flavor;
+      el.eventVisualIcon.textContent = ev.icon;
+      el.eventVisualText.textContent = `Aktywne przez cały run. Indykator będzie widoczny nad drzewem.`;
+      el.eventEffects.innerHTML = ev.effects.map(x => `<div class="small">• ${x}</div>`).join("");
+      el.eventOverlayModal.dataset.pendingEvent = eventKey;
+      el.eventOverlayModal.classList.add("show");
+    }
+
+    function closeEventModal() {
+      el.eventOverlayModal.classList.remove("show");
+      delete el.eventOverlayModal.dataset.pendingEvent;
+    }
+
+    function chooseRandomEventKey() {
+      const keys = Object.keys(EVENTS);
+      return keys[Math.floor(Math.random() * keys.length)];
+    }
+
+    function maybeAssignResetEvent() {
+      game.currentEventKey = null;
+      if (Math.random() <= 0.25) {
+        const key = chooseRandomEventKey();
+        openEventModal(key);
+      } else {
+        openSkillTreeAfterReset();
+      }
+    }
+
+    function applyStartBonuses() {
+      if (hasSkill("betterStart")) {
+        game.resources.wood.amount += 100;
+        game.resources.wood.lifetimeCollected += 100;
+      }
+      if (hasSkill("acceleratedStart")) {
+        game.resources.wood.amount += 50;
+        game.resources.wood.lifetimeCollected += 50;
+      }
+      if (hasSkill("readyInfrastructure")) {
+        game.resources.wood.units.crow.owned += 1;
+      }
+    }
+
+    function resetSkillTreeForAd() {
+      game.skillNodesBought = [];
+      game.spentSouls = 0;
+    }
+
+    function performPrestige() {
+      const gained = calculateSoulsGain();
+      const bought = [...game.skillNodesBought];
+      const oldSouls = game.souls;
+      const shouldResetTree = game.resetTreeOnNextPrestige;
+      const sidebarCollapsed = game.sidebarCollapsed;
+      const hasSeenPrestigeIntro = true;
+      const hasHadFirstSoulOpportunity = true;
+      const skillTreeUnlocked = true;
+
+      game = createNewGame();
+      game.sidebarCollapsed = sidebarCollapsed;
+      game.souls = oldSouls + gained;
+      game.hasSeenPrestigeIntro = hasSeenPrestigeIntro;
+      game.hasHadFirstSoulOpportunity = hasHadFirstSoulOpportunity;
+      game.hasPrestigedAtLeastOnce = true;
+      game.skillTreeUnlocked = skillTreeUnlocked;
+      game.currentRunIndex += 1;
+
+      if (shouldResetTree) {
+        game.skillNodesBought = [];
+        game.spentSouls = 0;
+      } else {
+        game.skillNodesBought = bought;
+        game.spentSouls = bought.length;
+      }
+
+      applyStartBonuses();
+      closeResetModal();
+      maybeAssignResetEvent();
+      renderUnitsList();
+      refreshAllUI();
+      saveGame(false);
+    }
+
+    function openSkillTreeAfterReset() {
+      game.skillTreeOpenForCurrentRun = true;
+      renderSkillTree();
+      el.skillTreeOverlay.classList.add("show");
+      refreshAllUI();
+    }
+
+    function closeSkillTree() {
+      game.skillTreeOpenForCurrentRun = false;
+      el.skillTreeOverlay.classList.remove("show");
+      refreshAllUI();
+      saveGame(false);
+    }
+
+    function canBuyNode(node) {
+      const available = game.souls - game.spentSouls;
+      if (hasSkill(node.id)) return false;
+      if (available < node.cost) return false;
+      return node.requires.every(hasSkill);
+    }
+
+    function buySkillNode(nodeId) {
+      const node = SKILL_NODES.find(n => n.id === nodeId);
+      if (!node || !canBuyNode(node)) return;
+      game.skillNodesBought.push(node.id);
+      game.spentSouls += node.cost;
+      renderSkillTree();
+      refreshAllUI();
+    }
+
+    function renderSkillTree() {
+      el.skillSoulsAvailable.textContent = formatNumber(game.souls - game.spentSouls);
+      el.skillTree.innerHTML = "";
+
+      const normalized = SKILL_NODES.map(n => ({ ...n, gx: n.pos[0], gy: n.pos[1] }));
+      const minX = Math.min(...normalized.map(n => n.gx));
+      const maxX = Math.max(...normalized.map(n => n.gx));
+      const minY = Math.min(...normalized.map(n => n.gy));
+      const maxY = Math.max(...normalized.map(n => n.gy));
+      const cols = maxX - minX + 1;
+      const rows = maxY - minY + 1;
+      el.skillTree.style.gridTemplateColumns = `repeat(${cols}, minmax(90px, 1fr))`;
+      el.skillTree.style.gridTemplateRows = `repeat(${rows}, 94px)`;
+
+      normalized.forEach(node => {
+        const cell = document.createElement("div");
+        cell.className = "skill-cell";
+        cell.style.gridColumn = (node.gx - minX + 1);
+        cell.style.gridRow = (node.gy - minY + 1);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "skill-btn";
+        const bought = hasSkill(node.id);
+        const available = canBuyNode(node);
+        if (bought) btn.classList.add("bought");
+        else if (available) btn.classList.add("available");
+        else btn.classList.add("locked-node");
+        btn.innerHTML = `
+          <div class="btn-title">${node.name}</div>
+          <div class="btn-desc">${node.desc}</div>
+          <div class="btn-desc">Koszt: ${node.cost}</div>
+        `;
+        btn.disabled = !available && !bought;
+        btn.addEventListener("click", () => buySkillNode(node.id));
+        cell.appendChild(btn);
+        el.skillTree.appendChild(cell);
+      });
+    }
+
+    function acceptEvent() {
+      const key = el.eventOverlayModal.dataset.pendingEvent;
+      game.currentEventKey = key;
+      closeEventModal();
+      openSkillTreeAfterReset();
+      refreshAllUI();
+    }
+
+    function removeEventWithAd() {
+      game.currentEventKey = null;
+      closeEventModal();
+      openSkillTreeAfterReset();
+      refreshAllUI();
+    }
+
+    el.materialBtn.addEventListener("click", buyMaterialUpgrade);
+    el.clickBtn.addEventListener("click", buyClickUpgrade);
+    el.resourceButton.addEventListener("click", clickResource);
+    el.btnWood.addEventListener("click", () => setCurrentResource("wood"));
+    el.btnStone.addEventListener("click", () => isUnlocked("stone") ? setCurrentResource("stone") : unlockResource("stone"));
+    el.btnIron.addEventListener("click", () => isUnlocked("iron") ? setCurrentResource("iron") : unlockResource("iron"));
+    el.adBoostBtn.addEventListener("click", activateSecretaryBoost);
+    el.sidebarToggle.addEventListener("click", () => { game.sidebarCollapsed = !game.sidebarCollapsed; refreshAllUI(); });
+    el.resetImperiumBtn.addEventListener("click", openResetModal);
+    el.closeResetBtn.addEventListener("click", closeResetModal);
+    el.confirmResetBtn.addEventListener("click", performPrestige);
+    el.resetTreeAdBtn.addEventListener("click", () => {
+      game.resetTreeOnNextPrestige = !game.resetTreeOnNextPrestige;
+      el.resetTreeStatus.textContent = game.resetTreeOnNextPrestige
+        ? "Drzewko zostanie zresetowane podczas tego resetu."
+        : "Drzewko pozostanie bez zmian.";
+    });
+    el.prestigeIntroLaterBtn.addEventListener("click", () => {
+      game.hasSeenPrestigeIntro = true;
+      el.prestigeIntroOverlay.classList.remove("show");
+      refreshAllUI();
+    });
+    el.prestigeIntroOpenBtn.addEventListener("click", () => {
+      game.hasSeenPrestigeIntro = true;
+      el.prestigeIntroOverlay.classList.remove("show");
+      openResetModal();
+      refreshAllUI();
+    });
+    el.acceptEventBtn.addEventListener("click", acceptEvent);
+    el.removeEventBtn.addEventListener("click", removeEventWithAd);
+    el.closeSkillTreeBtn.addEventListener("click", closeSkillTree);
+
+    loadGame();
+    rotateSecretaryLine();
+    renderUnitsList();
+    refreshAllUI();
+    if (game.skillTreeOpenForCurrentRun) openSkillTreeAfterReset();
+
+    setInterval(() => {
+      tick(0.1);
+      refreshAllUI();
+    }, 100);
+
+    setInterval(() => rotateSecretaryLine(), 8000);
+    setInterval(() => saveGame(true), 5000);
+    // ===== MUSIC SYSTEM =====
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+
+let musicStarted = false;
+
+// start po pierwszym kliknięciu (wymóg przeglądarki)
+document.addEventListener("click", () => {
+  if (!musicStarted) {
+    music.volume = 0.4;
+    music.play().catch(() => {});
+    musicStarted = true;
+  }
+}, { once: true });
+
+// mute / unmute
+musicBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  music.muted = !music.muted;
+  musicBtn.textContent = music.muted ? "🔇" : "🔊";
+});
+  </script>
+</body>
+</html>
