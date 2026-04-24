@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="pl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- saved from  -->
+<html lang="pl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Medieval Capitalist</title>
   <style>
     :root{
@@ -198,11 +198,11 @@
 
     .mouse-worker{
       position:absolute;
-      left:calc(50% - min(34vw, 330px));
-      top:calc(50% + 210px);
-      width:190px;
-      height:190px;
-      z-index:4;
+      left:calc(62% - min(34vw, 330px));
+      top:calc(64% + 210px);
+      width:170px;
+      height:170px;
+      z-index:6;
       pointer-events:none;
       transform:translate(-50%, -50%);
       display:none;
@@ -273,10 +273,10 @@
 
     .raven-worker{
       position:absolute;
-      left:calc(50% + min(31vw, 305px));
-      top:calc(50% - 135px);
-      width:220px;
-      height:220px;
+      left:calc(41% + min(31vw, 305px));
+      top:calc(54% - 135px);
+      width:190px;
+      height:190px;
       z-index:5;
       pointer-events:none;
       transform:translate(-50%, -50%);
@@ -342,6 +342,339 @@
       background:rgba(17,14,14,.94);
       border-right:2px solid var(--border);
       border-bottom:2px solid var(--border);
+    }
+
+
+
+    .skeleton-worker{
+      position:absolute;
+      left:calc(54% - min(19vw, 185px));
+      top:calc(58% + 128px);
+      width:400px;
+      height:350px;
+      z-index:4;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      display:none;
+      filter:drop-shadow(0 13px 20px rgba(0,0,0,.72));
+    }
+    .skeleton-worker.show{display:block}
+    .skeleton-worker img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .skeleton-count{
+      position:absolute;
+      left:50%;
+      bottom:2px;
+      transform:translateX(-50%);
+      min-width:52px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      background:rgba(24,18,16,.88);
+      color:#ffd9a3;
+      font-weight:bold;
+      font-size:15px;
+      text-align:center;
+      box-shadow:0 6px 14px var(--shadow);
+    }
+
+
+    .mage-worker{
+      position:absolute;
+      left:calc(49% + min(25vw, 250px));
+      top:calc(58% + 112px);
+      width:400px;
+      height:400px;
+      z-index:5;
+      pointer-events:none;
+      transform:translate(-50%, -50%) scaleX(-1);
+      display:none;
+      filter:drop-shadow(0 13px 20px rgba(0,0,0,.72));
+    }
+    .mage-worker.show{display:block}
+    .mage-worker img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .mage-count{
+      position:absolute;
+      left:50%;
+      bottom:2px;
+      transform:translateX(-50%) scaleX(-1);
+      min-width:52px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      background:rgba(24,18,16,.88);
+      color:#ffd9a3;
+      font-weight:bold;
+      font-size:15px;
+      text-align:center;
+      box-shadow:0 6px 14px var(--shadow);
+    }
+    .mage-bubble{
+      position:absolute;
+      left:50%;
+      top:-40px;
+      transform:translateX(-50%) translateY(6px) scaleX(-1);
+      min-width:220px;
+      max-width:310px;
+      padding:10px 13px;
+      border-radius:14px;
+      border:2px solid var(--border);
+      background:rgba(28,18,39,.94);
+      color:#eadbff;
+      font-size:14px;
+      line-height:1.25;
+      text-align:center;
+      box-shadow:0 8px 20px rgba(0,0,0,.45);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:8;
+    }
+    .mage-bubble.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0) scaleX(-1);
+    }
+    .mage-bubble::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      transform:translateX(-50%) rotate(45deg);
+      width:16px;
+      height:16px;
+      background:rgba(28,18,39,.94);
+      border-right:2px solid var(--border);
+      border-bottom:2px solid var(--border);
+    }
+
+    .knight-worker{
+      position:absolute;
+      left:calc(54% + min(38vw, 430px));
+      top:calc(58% + 130px);
+      width:800px;
+      height:800px;
+      z-index:9;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      display:none;
+      filter:drop-shadow(0 13px 20px rgba(0,0,0,.72));
+    }
+    .knight-worker.show{display:block}
+    .knight-worker img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .knight-count{
+      position:absolute;
+      left:50%;
+      bottom:2px;
+      transform:translateX(-50%);
+      min-width:52px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      background:rgba(24,18,16,.88);
+      color:#ffd9a3;
+      font-weight:bold;
+      font-size:15px;
+      text-align:center;
+      box-shadow:0 6px 14px var(--shadow);
+    }
+    .knight-bubble{
+      position:absolute;
+      left:50%;
+      top:-42px;
+      transform:translateX(-50%) translateY(6px);
+      min-width:230px;
+      max-width:320px;
+      padding:10px 13px;
+      border-radius:14px;
+      border:2px solid var(--border);
+      background:rgba(28,22,18,.95);
+      color:#ffe6bd;
+      font-size:14px;
+      line-height:1.25;
+      text-align:center;
+      box-shadow:0 8px 20px rgba(0,0,0,.45);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:8;
+    }
+    .knight-bubble.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    .knight-bubble::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      transform:translateX(-50%) rotate(45deg);
+      width:16px;
+      height:16px;
+      background:rgba(28,22,18,.95);
+      border-right:2px solid var(--border);
+      border-bottom:2px solid var(--border);
+    }
+
+
+    .dragon-worker{
+      position:absolute;
+      left:calc(-6% + min(50vw, 610px));
+      top:calc(80% + 108px);
+      width:1100px;
+      height:1100px;
+      z-index:10;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      display:none;
+      filter:drop-shadow(0 15px 24px rgba(0,0,0,.78));
+    }
+    .dragon-worker.show{display:block}
+    .dragon-worker img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .dragon-count{
+      position:absolute;
+      left:50%;
+      bottom:2px;
+      transform:translateX(-50%);
+      min-width:52px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      background:rgba(24,18,16,.88);
+      color:#ffd9a3;
+      font-weight:bold;
+      font-size:15px;
+      text-align:center;
+      box-shadow:0 6px 14px var(--shadow);
+    }
+    .dragon-bubble{
+      position:absolute;
+      left:50%;
+      top:-46px;
+      transform:translateX(-50%) translateY(6px);
+      min-width:250px;
+      max-width:360px;
+      padding:10px 13px;
+      border-radius:14px;
+      border:2px solid #7f4b2f;
+      background:rgba(36,17,12,.96);
+      color:#ffd0a3;
+      font-size:14px;
+      line-height:1.25;
+      text-align:center;
+      box-shadow:0 8px 24px rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:8;
+    }
+    .dragon-bubble.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    .dragon-bubble::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      transform:translateX(-50%) rotate(45deg);
+      width:16px;
+      height:16px;
+      background:rgba(36,17,12,.96);
+      border-right:2px solid #7f4b2f;
+      border-bottom:2px solid #7f4b2f;
+    }
+
+
+    .minotaur-worker{
+      position:absolute;
+      left:calc(58% + min(63vw, 790px));
+      top:calc(88% + 118px);
+      width:800px;
+      height:800px;
+      z-index:11;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      display:none;
+      filter:drop-shadow(0 15px 24px rgba(0,0,0,.78));
+    }
+    .minotaur-worker.show{display:block}
+    .minotaur-worker img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .minotaur-count{
+      position:absolute;
+      left:50%;
+      bottom:2px;
+      transform:translateX(-50%);
+      min-width:52px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      background:rgba(24,18,16,.88);
+      color:#ffd9a3;
+      font-weight:bold;
+      font-size:15px;
+      text-align:center;
+      box-shadow:0 6px 14px var(--shadow);
+    }
+    .minotaur-bubble{
+      position:absolute;
+      left:50%;
+      top:-46px;
+      transform:translateX(-50%) translateY(6px);
+      min-width:250px;
+      max-width:360px;
+      padding:10px 13px;
+      border-radius:14px;
+      border:2px solid #6b4c39;
+      background:rgba(18,14,12,.96);
+      color:#d8c2aa;
+      font-size:14px;
+      line-height:1.25;
+      text-align:center;
+      box-shadow:0 8px 24px rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:8;
+    }
+    .minotaur-bubble.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    .minotaur-bubble::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      transform:translateX(-50%) rotate(45deg);
+      width:16px;
+      height:16px;
+      background:rgba(18,14,12,.96);
+      border-right:2px solid #6b4c39;
+      border-bottom:2px solid #6b4c39;
     }
 
     .resource-button{
@@ -611,6 +944,11 @@
       .resource-button{min-width:300px;min-height:300px;width:min(96vw,620px);height:min(96vw,620px);font-size:90px}
       .mouse-worker{left:calc(50% - 180px);top:calc(50% + 160px);width:130px;height:130px}
       .raven-worker{left:calc(50% + 175px);top:calc(50% - 85px);width:145px;height:145px}
+      .skeleton-worker{left:calc(50% - 92px);top:calc(50% + 110px);width:165px;height:165px}
+      .mage-worker{left:calc(50% + 110px);top:calc(50% + 108px);width:165px;height:165px}
+      .knight-worker{left:calc(50% + 210px);top:calc(50% + 118px);width:165px;height:165px}
+      .dragon-worker{left:calc(50% + 285px);top:calc(50% + 105px);width:185px;height:185px}
+      .minotaur-worker{left:calc(50% + 360px);top:calc(50% + 112px);width:185px;height:185px}
       .click-label{top:82px;padding:9px 14px;}
       .click-label .name{font-size:28px;}
       .workers{width:min(300px, calc(100vw - 24px));right:12px;top:150px;}
@@ -638,6 +976,56 @@
     #musicBtn:hover{
       filter:brightness(1.1);
     }
+
+    #devBtn{
+      width:50px;
+      height:50px;
+      border-radius:12px;
+      border:2px solid var(--border);
+      background:linear-gradient(180deg,#4a362c,#281d18);
+      color:white;
+      font-size:20px;
+      cursor:pointer;
+      margin-left:6px;
+    }
+
+    #devBtn:hover{
+      filter:brightness(1.1);
+    }
+
+    .dev-panel{
+      position:absolute;
+      right:18px;
+      bottom:82px;
+      z-index:9999;
+      width:230px;
+      background:rgba(18,13,11,.96);
+      border:2px solid var(--border);
+      border-radius:14px;
+      padding:10px;
+      box-shadow:0 10px 24px rgba(0,0,0,.55);
+      display:none;
+    }
+    .dev-panel.show{display:block;}
+    .dev-panel-title{
+      font-weight:bold;
+      color:#ffd9a3;
+      margin-bottom:8px;
+      text-align:center;
+    }
+    .dev-panel button{
+      width:100%;
+      margin:4px 0;
+      padding:7px 8px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg,#4a362c,#281d18);
+      color:var(--text);
+      cursor:pointer;
+      font-family:inherit;
+    }
+    .dev-panel button:hover{filter:brightness(1.12);}
+
   </style>
 </head>
 <body>
@@ -648,9 +1036,9 @@
       <div class="fixed-section panel">
         <h2 class="resource-title" id="leftResourceName">Drewno</h2>
         <div class="small">Ponury surowiec z ogromnym potencjałem wzrostu.</div>
-        <div class="stat-row"><span>Ilość</span><strong id="leftAmount">0</strong></div>
-        <div class="stat-row"><span>Na sekundę</span><strong id="leftPerSecond">0/s</strong></div>
-        <div class="stat-row"><span>Siła kliku</span><strong id="leftClickPower">1</strong></div>
+        <div class="stat-row"><span>Ilość</span><strong id="leftAmount">10.8K</strong></div>
+        <div class="stat-row"><span>Na sekundę</span><strong id="leftPerSecond">10.9/s</strong></div>
+        <div class="stat-row"><span>Siła kliku</span><strong id="leftClickPower">1.5</strong></div>
         <div class="stat-row"><span>Poziom materiału</span><strong id="leftMaterialLevel">1</strong></div>
         <div class="stat-row"><span>Poziom kliku</span><strong id="leftClickLevel">1</strong></div>
       </div>
@@ -660,7 +1048,7 @@
         <button class="upgrade-btn" id="materialBtn" type="button">
           <div class="btn-title">⚒️ Ulepsz materiał</div>
           <div class="btn-desc">+50% do wydobycia tego surowca</div>
-          <div class="btn-desc" id="materialBtnCost">Koszt: 1 000</div>
+          <div class="btn-desc" id="materialBtnCost">Koszt: 1.00K</div>
         </button>
 
         <button class="upgrade-btn" id="clickBtn" type="button">
@@ -672,7 +1060,49 @@
 
       <div class="panel scroll-units">
         <h3>Zakup jednostek</h3>
-        <div id="unitsList"></div>
+        <div id="unitsList"><button class="unit-btn" type="button" data-unit-key="mouse" data-unit-index="0">
+          <div class="btn-title">🐭 Mysz (<span class="owned">3</span>)</div>
+          <div class="btn-desc">+0.1/s</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">0.1</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">0.3</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">1</span> | Koszt: <span class="cost">43</span></div>
+        </button><button class="unit-btn" type="button" data-unit-key="crow" data-unit-index="1">
+          <div class="btn-title">🐦‍⬛ Wrona (<span class="owned">2</span>)</div>
+          <div class="btn-desc">+1/s</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">1</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">2</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">1</span> | Koszt: <span class="cost">144</span></div>
+        </button><button class="unit-btn" type="button" data-unit-key="skeleton" data-unit-index="2">
+          <div class="btn-title">💀 Szkielet (<span class="owned">1</span>)</div>
+          <div class="btn-desc">+5/s</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">5</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">5</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">1</span> | Koszt: <span class="cost">300</span></div>
+        </button><button class="unit-btn" type="button" data-unit-key="mage" data-unit-index="3">
+          <div class="btn-title">🧙 Szkielet Mag (<span class="owned">0</span>)</div>
+          <div class="btn-desc">+10/s</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">10</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">0</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">1</span> | Koszt: <span class="cost">5.00K</span></div>
+        </button><button class="unit-btn" type="button" data-unit-key="deathKnight" data-unit-index="4">
+          <div class="btn-title">🛡️ Rycerz Śmierci (<span class="owned">0</span>)</div>
+          <div class="btn-desc">+50/s</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">50</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">0</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">1</span> | Koszt: <span class="cost">50.0K</span></div>
+        </button><button class="unit-btn" type="button" data-unit-key="minotaur" data-unit-index="5">
+          <div class="btn-title">🐂 Minotaur Szkielet (<span class="owned">0</span>)</div>
+          <div class="btn-desc">+100/s</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">100</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">0</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">1</span> | Koszt: <span class="cost">250K</span></div>
+        </button><button class="unit-btn" type="button" data-unit-key="dragon" data-unit-index="6">
+          <div class="btn-title">🐉 Smok (<span class="owned">0</span>)</div>
+          <div class="btn-desc">+250/s</div>
+          <div class="btn-desc">Za sztukę: +<span class="perUnit">250</span>/s</div>
+          <div class="btn-desc">Łącznie: +<span class="totalProd">0</span>/s</div>
+          <div class="btn-desc">Milestone: x<span class="milestone">1</span> | Koszt: <span class="cost">1.00M</span></div>
+        </button></div>
       </div>
 
       <div class="fixed-section panel">
@@ -680,8 +1110,8 @@
         <div class="tiny">Nowe surowce odblokowujesz po zapłaceniu wymaganej kwoty.</div>
         <div class="bottom-resources">
           <button class="resource-btn active" id="btnWood" type="button">🪵 Drewno</button>
-          <button class="resource-btn locked" id="btnStone" type="button">🔒 Kamień</button>
-          <button class="resource-btn locked" id="btnIron" type="button">🔒 Żelazo</button>
+          <button class="resource-btn locked" id="btnStone" type="button">🔒 Kamień (250K)</button>
+          <button class="resource-btn locked" id="btnIron" type="button">🔒 Żelazo (250K)</button>
         </div>
       </div>
     </aside>
@@ -696,15 +1126,15 @@
         </div>
         <div class="top-stat">
           <div class="label">Ilość</div>
-          <div class="value" id="topAmount">0</div>
+          <div class="value" id="topAmount">10.8K</div>
         </div>
         <div class="top-stat">
           <div class="label">Na sekundę</div>
-          <div class="value" id="topPerSecond">0/s</div>
+          <div class="value" id="topPerSecond">10.9/s</div>
         </div>
         <div class="top-stat">
           <div class="label">Boost sekretarki</div>
-          <div class="value" id="topBoost">Brak</div>
+          <div class="value" id="topBoost">50% (43m 29s)</div>
         </div>
         <div class="top-stat">
           <div class="label">Dusze</div>
@@ -730,23 +1160,56 @@
             <div class="name" id="eventIndicatorName"></div>
           </div>
 
-          <div class="mouse-worker" id="mouseWorker">
+          <div class="mouse-worker show" id="mouseWorker">
             <div class="mouse-bubble" id="mouseBubble"></div>
             <img src="assets/mouse_1.png" alt="Mysz pracująca przy drzewie" id="mouseWorkerImg">
-            <div class="mouse-count" id="mouseWorkerCount">x1</div>
+            <div class="mouse-count" id="mouseWorkerCount">x3</div>
           </div>
 
-          <div class="raven-worker" id="ravenWorker">
+
+
+          <div class="skeleton-worker show" id="skeletonWorker">
+            <img src="assets/skeleton_1.png" alt="Szkielet rąbiący drzewo" id="skeletonWorkerImg">
+            <div class="skeleton-count" id="skeletonWorkerCount">x1</div>
+          </div>
+
+          <div class="raven-worker show" id="ravenWorker">
             <div class="raven-bubble" id="ravenBubble"></div>
             <img src="assets/raven_1.png" alt="Wrona dziobiąca drewno" id="ravenWorkerImg">
-            <div class="raven-count" id="ravenWorkerCount">x1</div>
+            <div class="raven-count" id="ravenWorkerCount">x2</div>
+          </div>
+
+
+
+          <div class="mage-worker" id="mageWorker">
+            <div class="mage-bubble" id="mageBubble"></div>
+            <img src="assets/mage_1.png" alt="Szkielet mag rzucający zaklęcie" id="mageWorkerImg">
+            <div class="mage-count" id="mageWorkerCount">x0</div>
+          </div>
+
+          <div class="knight-worker" id="knightWorker">
+            <div class="knight-bubble" id="knightBubble"></div>
+            <img src="assets/knight_1.png" alt="Rycerz śmierci motywujący zespół" id="knightWorkerImg">
+            <div class="knight-count" id="knightWorkerCount">x0</div>
+          </div>
+
+          <div class="dragon-worker" id="dragonWorker">
+            <div class="dragon-bubble" id="dragonBubble"></div>
+            <img src="assets/dragon_1.png" alt="Smok kapitalista nadzorujący kurwidołek" id="dragonWorkerImg">
+            <div class="dragon-count" id="dragonWorkerCount">x0</div>
+          </div>
+
+          <div class="minotaur-worker" id="minotaurWorker">
+            <div class="minotaur-bubble" id="minotaurBubble"></div>
+            <img src="assets/minotaur_1.png" alt="Minotaur, któremu nie chce się pracować" id="minotaurWorkerImg">
+            <div class="minotaur-count" id="minotaurWorkerCount">x0</div>
           </div>
 
           <div class="resource-button wood" id="resourceButton">
            <img src="assets/wood_1.png" alt="Drewno" class="resource-img" id="resourceImage">
           </div>
           <div class="click-power">
-            Klik: <strong id="centerClickPower">1</strong>
+            Klik: <strong id="centerClickPower">1.5</strong>
           </div>
         </section>
 
@@ -762,16 +1225,14 @@
     </div>
   </div>
 
-  <div class="speech" id="speechBox">
-    Świetna robota! Twoje imperium rośnie, a pracownicy... cóż, robią co mogą.
-  </div>
+  <div class="speech" id="speechBox">Rynek kocha odważnych. Twoi poddani wolą nie komentować.</div>
 
   <button class="ad-btn" id="adBoostBtn" type="button">
     <div class="btn-title">📺 Zwiększ efektywność o 50% na 1 godzinę</div>
     <div class="btn-desc">Na razie symulacja reklamy — klik aktywuje bonus</div>
   </button>
 
-  <div class="boost-active" id="boostTimer"></div>
+  <div class="boost-active" id="boostTimer">Bonus aktywny: jeszcze 43m 29s</div>
 </div>
 
           <div class="panel">
@@ -880,10 +1341,26 @@
     </div>
     <!-- MUSIC -->
 <div class="music-control">
-  <button id="musicBtn">🔊</button>
+  <button id="musicBtn">🔇</button>
+  <button id="devBtn" type="button">🛠️</button>
 </div>
 
-<audio id="bgMusic" loop>
+
+<div class="dev-panel" id="devPanel">
+  <div class="dev-panel-title">DEV TOOLS</div>
+  <button type="button" data-dev-action="wood">+1000 drewna</button>
+  <button type="button" data-dev-action="mouse">+1 mysz</button>
+  <button type="button" data-dev-action="crow">+1 wrona</button>
+  <button type="button" data-dev-action="skeleton">+1 szkielet</button>
+  <button type="button" data-dev-action="mage">+1 mag</button>
+  <button type="button" data-dev-action="deathKnight">+1 rycerz</button>
+  <button type="button" data-dev-action="minotaur">+1 minotaur</button>
+  <button type="button" data-dev-action="dragon">+1 smok</button>
+  <button type="button" data-dev-action="souls">+10 dusz</button>
+  <button type="button" data-dev-action="resetSave">Wyczyść save</button>
+</div>
+
+<audio id="bgMusic" loop="">
   <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
   </div>
@@ -942,6 +1419,62 @@
       "Kraaa... wszystko się wali. Idealnie.",
       "Krrr... jestem tu dla chaosu i okruszków.",
       "Kra... drewno krzyczy. Lubię to."
+    ];
+
+
+
+    const MAGE_BUBBLE_LINES = [
+      "Czy ja wyglądam jak drwal?!",
+      "Magia została wynaleziona, żeby NIE pracować fizycznie...",
+      "To powinno być robione zaklęciem, nie ręką...",
+      "Rzucam czary, a zarząd każe mi robić za tartak.",
+      "Gdzie jest mój dział badań i rozwoju?!",
+      "Ja mam doktorat z nekromancji, nie z machania kijem.",
+      "To nie jest w opisie mojej pracy... chyba że HR znowu zmienił PDF-a.",
+      "Powinienem optymalizować proces, nie spalać korę.",
+      "Czy ktoś widział mój magiczny skrót do lenistwa?",
+      "To drewno nie docenia mojej inteligencji."
+    ];
+
+    const KNIGHT_BUBBLE_LINES = [
+      "Dobra robota zespół! Jeszcze tylko 12 godzin!",
+      "Musimy zwiększyć wydajność o 300%!",
+      "Wierzę w was! Nawet jeśli wy nie wierzycie!",
+      "Pamiętajcie — pracujemy jako DRUŻYNA!",
+      "Nie ma problemów, są tylko wyzwania i za mało dusz.",
+      "Deadliny nie są martwe. My jesteśmy.",
+      "Jeszcze trochę i osiągniemy sukces! Może.",
+      "Motywacja to podstawa! Reszta jest opcjonalna.",
+      "Dajcie z siebie 110%! Albo ile macie kości.",
+      "Zespół to siła! A ja jestem liderem tej siły!"
+    ];
+
+    const DRAGON_BUBBLE_LINES = [
+      "Pracujcie szybciej. Mój cylinder sam się nie opłaci.",
+      "Ach, klasa pracująca... taka uroczo tania.",
+      "Nie słyszę narzekań przez dźwięk mojego zysku.",
+      "Płomień motywacyjny zawsze działa.",
+      "Wasz trud jest fundamentem mojego fotela.",
+      "Nie jestem chciwy. Jestem strategicznie głodny.",
+      "Niższa klasa ma potencjał. Głównie produkcyjny.",
+      "Zysk rośnie. Sumienie nie wykryto.",
+      "Ktoś musi posiadać środki produkcji. Padło na mnie.",
+      "Pracujcie, moi mali amortyzowani podwładni."
+    ];
+
+    const MINOTAUR_BUBBLE_LINES = [
+      "Nie chce mi się...",
+      "To wszystko nie ma sensu...",
+      "Wszyscy tu są idiotami...",
+      "Po co ja w ogóle tu stoję?",
+      "To drzewo ma więcej sensu niż ta firma...",
+      "Nienawidzę tej roboty.",
+      "Czy ktoś może mnie zwolnić?",
+      "Życie? Nie. Symulacja cierpienia.",
+      "Serio? Dalej pracujemy?",
+      "Bez sensu. Wszystko bez sensu.",
+      "Zarząd to banda klaunów w zbroi.",
+      "Nawet para z nosa ma większy plan niż wy."
     ];
 
     const EVENTS = {
@@ -1079,10 +1612,29 @@
       mouseWorkerImg: document.getElementById("mouseWorkerImg"),
       mouseWorkerCount: document.getElementById("mouseWorkerCount"),
       mouseBubble: document.getElementById("mouseBubble"),
+      skeletonWorker: document.getElementById("skeletonWorker"),
+      skeletonWorkerImg: document.getElementById("skeletonWorkerImg"),
+      skeletonWorkerCount: document.getElementById("skeletonWorkerCount"),
       ravenWorker: document.getElementById("ravenWorker"),
       ravenWorkerImg: document.getElementById("ravenWorkerImg"),
       ravenWorkerCount: document.getElementById("ravenWorkerCount"),
       ravenBubble: document.getElementById("ravenBubble"),
+      mageWorker: document.getElementById("mageWorker"),
+      mageWorkerImg: document.getElementById("mageWorkerImg"),
+      mageWorkerCount: document.getElementById("mageWorkerCount"),
+      mageBubble: document.getElementById("mageBubble"),
+      knightWorker: document.getElementById("knightWorker"),
+      knightWorkerImg: document.getElementById("knightWorkerImg"),
+      knightWorkerCount: document.getElementById("knightWorkerCount"),
+      knightBubble: document.getElementById("knightBubble"),
+      dragonWorker: document.getElementById("dragonWorker"),
+      dragonWorkerImg: document.getElementById("dragonWorkerImg"),
+      dragonWorkerCount: document.getElementById("dragonWorkerCount"),
+      dragonBubble: document.getElementById("dragonBubble"),
+      minotaurWorker: document.getElementById("minotaurWorker"),
+      minotaurWorkerImg: document.getElementById("minotaurWorkerImg"),
+      minotaurWorkerCount: document.getElementById("minotaurWorkerCount"),
+      minotaurBubble: document.getElementById("minotaurBubble"),
       clickArea: document.getElementById("clickArea"),
       speechBox: document.getElementById("speechBox"),
       adBoostBtn: document.getElementById("adBoostBtn"),
@@ -1491,6 +2043,16 @@
       }, 45);
     }
 
+
+
+    function updateSkeletonWorker() {
+      const state = getCurrentState();
+      const owned = state.units.skeleton?.owned || 0;
+      const shouldShow = owned > 0 && game.currentResource === "wood";
+      el.skeletonWorker.classList.toggle("show", shouldShow);
+      el.skeletonWorkerCount.textContent = `x${owned}`;
+    }
+
     function updateRavenWorker() {
       const state = getCurrentState();
       const owned = state.units.crow?.owned || 0;
@@ -1552,6 +2114,253 @@
       }, 45);
     }
 
+
+
+    function updateMageWorker() {
+      const state = getCurrentState();
+      const owned = state.units.mage?.owned || 0;
+      const shouldShow = owned > 0 && game.currentResource === "wood";
+      el.mageWorker.classList.toggle("show", shouldShow);
+      el.mageWorkerCount.textContent = `x${owned}`;
+      if (!shouldShow) {
+        el.mageBubble.classList.remove("show");
+        el.mageBubble.textContent = "";
+      }
+    }
+
+    let mageBubbleTimeout = null;
+    let mageBubbleTypeInterval = null;
+
+    function hasVisibleMageWorker() {
+      const state = game.resources.wood;
+      return game.currentResource === "wood" && (state.units.mage?.owned || 0) > 0;
+    }
+
+    function getRandomMageBubbleDelay() {
+      return 30000 + Math.floor(Math.random() * 30001);
+    }
+
+    function scheduleNextMageBubble() {
+      clearTimeout(mageBubbleTimeout);
+      mageBubbleTimeout = setTimeout(() => {
+        showMageBubble();
+      }, getRandomMageBubbleDelay());
+    }
+
+    function showMageBubble() {
+      clearInterval(mageBubbleTypeInterval);
+
+      if (!hasVisibleMageWorker()) {
+        el.mageBubble.classList.remove("show");
+        el.mageBubble.textContent = "";
+        scheduleNextMageBubble();
+        return;
+      }
+
+      const text = MAGE_BUBBLE_LINES[Math.floor(Math.random() * MAGE_BUBBLE_LINES.length)];
+      let index = 0;
+      el.mageBubble.textContent = "";
+      el.mageBubble.classList.add("show");
+
+      mageBubbleTypeInterval = setInterval(() => {
+        index += 1;
+        el.mageBubble.textContent = text.slice(0, index);
+
+        if (index >= text.length) {
+          clearInterval(mageBubbleTypeInterval);
+          setTimeout(() => {
+            el.mageBubble.classList.remove("show");
+            el.mageBubble.textContent = "";
+            scheduleNextMageBubble();
+          }, 650);
+        }
+      }, 45);
+    }
+
+    function updateKnightWorker() {
+      const state = getCurrentState();
+      const owned = state.units.deathKnight?.owned || 0;
+      const shouldShow = owned > 0 && game.currentResource === "wood";
+      el.knightWorker.classList.toggle("show", shouldShow);
+      el.knightWorkerCount.textContent = `x${owned}`;
+      if (!shouldShow) {
+        el.knightBubble.classList.remove("show");
+        el.knightBubble.textContent = "";
+      }
+    }
+
+    let knightBubbleTimeout = null;
+    let knightBubbleTypeInterval = null;
+
+    function hasVisibleKnightWorker() {
+      const state = game.resources.wood;
+      return game.currentResource === "wood" && (state.units.deathKnight?.owned || 0) > 0;
+    }
+
+    function getRandomKnightBubbleDelay() {
+      return 30000 + Math.floor(Math.random() * 30001);
+    }
+
+    function scheduleNextKnightBubble() {
+      clearTimeout(knightBubbleTimeout);
+      knightBubbleTimeout = setTimeout(() => {
+        showKnightBubble();
+      }, getRandomKnightBubbleDelay());
+    }
+
+    function showKnightBubble() {
+      clearInterval(knightBubbleTypeInterval);
+
+      if (!hasVisibleKnightWorker()) {
+        el.knightBubble.classList.remove("show");
+        el.knightBubble.textContent = "";
+        scheduleNextKnightBubble();
+        return;
+      }
+
+      const text = KNIGHT_BUBBLE_LINES[Math.floor(Math.random() * KNIGHT_BUBBLE_LINES.length)];
+      let index = 0;
+      el.knightBubble.textContent = "";
+      el.knightBubble.classList.add("show");
+
+      knightBubbleTypeInterval = setInterval(() => {
+        index += 1;
+        el.knightBubble.textContent = text.slice(0, index);
+
+        if (index >= text.length) {
+          clearInterval(knightBubbleTypeInterval);
+          setTimeout(() => {
+            el.knightBubble.classList.remove("show");
+            el.knightBubble.textContent = "";
+            scheduleNextKnightBubble();
+          }, 650);
+        }
+      }, 45);
+    }
+
+
+    function updateDragonWorker() {
+      const state = getCurrentState();
+      const owned = state.units.dragon?.owned || 0;
+      const shouldShow = owned > 0 && game.currentResource === "wood";
+      el.dragonWorker.classList.toggle("show", shouldShow);
+      el.dragonWorkerCount.textContent = `x${owned}`;
+      if (!shouldShow) {
+        el.dragonBubble.classList.remove("show");
+        el.dragonBubble.textContent = "";
+      }
+    }
+
+    let dragonBubbleTimeout = null;
+    let dragonBubbleTypeInterval = null;
+
+    function hasVisibleDragonWorker() {
+      const state = game.resources.wood;
+      return game.currentResource === "wood" && (state.units.dragon?.owned || 0) > 0;
+    }
+
+    function getRandomDragonBubbleDelay() {
+      return 30000 + Math.floor(Math.random() * 30001);
+    }
+
+    function scheduleNextDragonBubble() {
+      clearTimeout(dragonBubbleTimeout);
+      dragonBubbleTimeout = setTimeout(() => {
+        showDragonBubble();
+      }, getRandomDragonBubbleDelay());
+    }
+
+    function showDragonBubble() {
+      clearInterval(dragonBubbleTypeInterval);
+
+      if (!hasVisibleDragonWorker()) {
+        el.dragonBubble.classList.remove("show");
+        el.dragonBubble.textContent = "";
+        scheduleNextDragonBubble();
+        return;
+      }
+
+      const text = DRAGON_BUBBLE_LINES[Math.floor(Math.random() * DRAGON_BUBBLE_LINES.length)];
+      let index = 0;
+      el.dragonBubble.textContent = "";
+      el.dragonBubble.classList.add("show");
+
+      dragonBubbleTypeInterval = setInterval(() => {
+        index += 1;
+        el.dragonBubble.textContent = text.slice(0, index);
+
+        if (index >= text.length) {
+          clearInterval(dragonBubbleTypeInterval);
+          setTimeout(() => {
+            el.dragonBubble.classList.remove("show");
+            el.dragonBubble.textContent = "";
+            scheduleNextDragonBubble();
+          }, 650);
+        }
+      }, 45);
+    }
+
+    function updateMinotaurWorker() {
+      const state = getCurrentState();
+      const owned = state.units.minotaur?.owned || 0;
+      const shouldShow = owned > 0 && game.currentResource === "wood";
+      el.minotaurWorker.classList.toggle("show", shouldShow);
+      el.minotaurWorkerCount.textContent = `x${owned}`;
+      if (!shouldShow) {
+        el.minotaurBubble.classList.remove("show");
+        el.minotaurBubble.textContent = "";
+      }
+    }
+
+    let minotaurBubbleTimeout = null;
+    let minotaurBubbleTypeInterval = null;
+
+    function hasVisibleMinotaurWorker() {
+      const state = game.resources.wood;
+      return game.currentResource === "wood" && (state.units.minotaur?.owned || 0) > 0;
+    }
+
+    function getRandomMinotaurBubbleDelay() {
+      return 30000 + Math.floor(Math.random() * 30001);
+    }
+
+    function scheduleNextMinotaurBubble() {
+      clearTimeout(minotaurBubbleTimeout);
+      minotaurBubbleTimeout = setTimeout(() => {
+        showMinotaurBubble();
+      }, getRandomMinotaurBubbleDelay());
+    }
+
+    function showMinotaurBubble() {
+      clearInterval(minotaurBubbleTypeInterval);
+
+      if (!hasVisibleMinotaurWorker()) {
+        el.minotaurBubble.classList.remove("show");
+        el.minotaurBubble.textContent = "";
+        scheduleNextMinotaurBubble();
+        return;
+      }
+
+      const text = MINOTAUR_BUBBLE_LINES[Math.floor(Math.random() * MINOTAUR_BUBBLE_LINES.length)];
+      let index = 0;
+      el.minotaurBubble.textContent = "";
+      el.minotaurBubble.classList.add("show");
+
+      minotaurBubbleTypeInterval = setInterval(() => {
+        index += 1;
+        el.minotaurBubble.textContent = text.slice(0, index);
+
+        if (index >= text.length) {
+          clearInterval(minotaurBubbleTypeInterval);
+          setTimeout(() => {
+            el.minotaurBubble.classList.remove("show");
+            el.minotaurBubble.textContent = "";
+            scheduleNextMinotaurBubble();
+          }, 650);
+        }
+      }, 45);
+    }
+
     function refreshAllUI() {
       const def = RESOURCE_DEFS[game.currentResource];
       const state = getCurrentState();
@@ -1579,7 +2388,12 @@
       updateResetButton();
       updateEventIndicator();
       updateMouseWorker();
+      updateSkeletonWorker();
       updateRavenWorker();
+      updateMageWorker();
+      updateKnightWorker();
+      updateDragonWorker();
+      updateMinotaurWorker();
       el.sidebar.classList.toggle("collapsed", game.sidebarCollapsed);
       el.sidebarToggle.textContent = game.sidebarCollapsed ? "▶" : "◀";
     }
@@ -1855,6 +2669,10 @@
     if (game.skillTreeOpenForCurrentRun) openSkillTreeAfterReset();
     scheduleNextMouseBubble();
     scheduleNextRavenBubble();
+    scheduleNextMageBubble();
+    scheduleNextKnightBubble();
+    scheduleNextDragonBubble();
+    scheduleNextMinotaurBubble();
 
     let mouseAnimFrame = 1;
     setInterval(() => {
@@ -1863,12 +2681,51 @@
       el.mouseWorkerImg.src = `assets/mouse_${mouseAnimFrame}.png`;
     }, 420);
 
+
+
+    let skeletonAnimFrame = 1;
+    setInterval(() => {
+      if (!el.skeletonWorker.classList.contains("show")) return;
+      skeletonAnimFrame = skeletonAnimFrame === 1 ? 2 : 1;
+      el.skeletonWorkerImg.src = `assets/skeleton_${skeletonAnimFrame}.png`;
+    }, 520);
+
     let ravenAnimFrame = 1;
     setInterval(() => {
       if (!el.ravenWorker.classList.contains("show")) return;
       ravenAnimFrame = ravenAnimFrame === 1 ? 2 : 1;
       el.ravenWorkerImg.src = `assets/raven_${ravenAnimFrame}.png`;
     }, 460);
+
+
+
+    let mageAnimFrame = 1;
+    setInterval(() => {
+      if (!el.mageWorker.classList.contains("show")) return;
+      mageAnimFrame = mageAnimFrame === 1 ? 2 : 1;
+      el.mageWorkerImg.src = `assets/mage_${mageAnimFrame}.png`;
+    }, 560);
+
+    let knightAnimFrame = 1;
+    setInterval(() => {
+      if (!el.knightWorker.classList.contains("show")) return;
+      knightAnimFrame = knightAnimFrame === 1 ? 2 : 1;
+      el.knightWorkerImg.src = `assets/knight_${knightAnimFrame}.png`;
+    }, 620);
+
+    let dragonAnimFrame = 1;
+    setInterval(() => {
+      if (!el.dragonWorker.classList.contains("show")) return;
+      dragonAnimFrame = dragonAnimFrame === 1 ? 2 : 1;
+      el.dragonWorkerImg.src = `assets/dragon_${dragonAnimFrame}.png`;
+    }, 720);
+
+    let minotaurAnimFrame = 1;
+    setInterval(() => {
+      if (!el.minotaurWorker.classList.contains("show")) return;
+      minotaurAnimFrame = minotaurAnimFrame === 1 ? 2 : 1;
+      el.minotaurWorkerImg.src = `assets/minotaur_${minotaurAnimFrame}.png`;
+    }, 900);
 
     // LOGIKA GRY: liczenie produkcji zostaje płynne
     setInterval(() => {
@@ -1909,5 +2766,83 @@ musicBtn.addEventListener("click", (e) => {
   musicBtn.textContent = music.muted ? "🔇" : "🔊";
 });
   </script>
-</body>
-</html>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+
+
+// ===== DEV TOOLS =====
+const devBtn = document.getElementById("devBtn");
+const devPanel = document.getElementById("devPanel");
+
+if (devBtn && devPanel) {
+  devBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    devPanel.classList.toggle("show");
+  });
+
+  devPanel.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-dev-action]");
+    if (!btn) return;
+
+    const action = btn.dataset.devAction;
+    const wood = game.resources.wood;
+
+    if (action === "wood") {
+      wood.amount += 1000;
+      wood.lifetimeCollected += 1000;
+    } else if (action === "souls") {
+      game.souls += 10;
+    } else if (action === "resetSave") {
+      if (confirm("Wyczyścić zapis gry?")) {
+        localStorage.removeItem(SAVE_KEY);
+        location.reload();
+      }
+      return;
+    } else if (wood.units[action]) {
+      wood.units[action].owned += 1;
+    }
+
+    renderUnitsList();
+    refreshAllUI();
+    saveGame(false);
+  });
+}
+</script>
+
+
+</body></html>
