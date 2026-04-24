@@ -27,8 +27,9 @@
       margin:0;
       font-family: Georgia, "Times New Roman", serif;
       background:
-        radial-gradient(circle at top, #2b231d 0%, #120f0d 45%),
-        linear-gradient(180deg, #1b1511, #0f0c0a);
+        linear-gradient(rgba(18,15,13,.34), rgba(18,15,13,.52)),
+        url("assets/background_1.png") center center / cover no-repeat fixed,
+        #120f0d;
       color:var(--text);
       overflow:hidden;
     }
@@ -36,7 +37,7 @@
     button{font-family:inherit}
 
     .app{
-      display:flex;
+      display:block;
       height:100vh;
       width:100%;
       position:relative;
@@ -44,6 +45,10 @@
     }
 
     .sidebar{
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
       width:320px;
       min-width:320px;
       background:linear-gradient(180deg, rgba(48,35,28,.98), rgba(26,19,15,.98));
@@ -54,17 +59,18 @@
       flex-direction:column;
       gap:10px;
       transition:transform .25s ease;
-      z-index:5;
+      z-index:20;
     }
-    .sidebar.collapsed{transform:translateX(-284px)}
+    .sidebar.collapsed{transform:translateX(-100%)}
 
     .sidebar-toggle{
       position:absolute;
       left:320px;
-      top:16px;
-      z-index:8;
-      width:36px;
-      height:48px;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:25;
+      width:54px;
+      height:72px;
       border:none;
       background:linear-gradient(180deg, #4a362c, #281d18);
       color:var(--text);
@@ -72,10 +78,10 @@
       border:2px solid var(--border);
       border-left:none;
       cursor:pointer;
-      font-size:18px;
+      font-size:27px;
       transition:left .25s ease, background .2s ease;
     }
-    .sidebar.collapsed + .sidebar-toggle{left:36px}
+    .sidebar.collapsed + .sidebar-toggle{left:0}
     .sidebar-toggle:hover{background:linear-gradient(180deg,#5b4335,#33251e)}
 
     .panel{
@@ -120,14 +126,14 @@
     .danger-btn,.reset-btn{background:linear-gradient(180deg,#6a2f28,#3d1713);border-color:#87473e}
     .secondary-btn{background:linear-gradient(180deg,#4a3e36,#261f1b)}
 
-    .main{flex:1;display:flex;flex-direction:column;min-width:0}
+    .main{position:absolute;inset:0;display:flex;flex-direction:column;min-width:0}
 
     .topbar{
       display:flex;
       gap:10px;
       padding:12px;
       border-bottom:2px solid var(--border);
-      background:rgba(23,16,13,.75);
+      background:rgba(23,16,13,.58);
       backdrop-filter:blur(4px);
       align-items:stretch;
     }
@@ -146,28 +152,24 @@
 
     .content{
       flex:1;
-      display:grid;
-      grid-template-columns:1fr 290px;
-      gap:12px;
-      padding:12px;
+      position:relative;
       min-height:0;
+      padding:0;
     }
 
-     .click-area{
+    .click-area{
+      position:absolute;
+      inset:0;
       min-height:0;
-      background:
-      linear-gradient(rgba(18,15,13,.28), rgba(18,15,13,.38)),
-      url("assets/background_1.png") center center / cover no-repeat;
-      border:2px solid var(--border);
-      border-radius:18px;
-      position:relative;
+      background:transparent;
+      border:none;
+      border-radius:0;
       overflow:hidden;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      box-shadow:0 8px 20px var(--shadow);
-    }
+      box-shadow:none;
     }
     .scene-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 75%, rgba(90,255,120,.07), transparent 18%),radial-gradient(circle at 78% 24%, rgba(255,180,90,.06), transparent 22%)}
     .scene-overlay-event{position:absolute;inset:0;pointer-events:none;opacity:.22}
@@ -176,17 +178,179 @@
     .event-mages{background:radial-gradient(circle at 25% 25%, rgba(160,100,255,.25), transparent 19%),radial-gradient(circle at 75% 75%, rgba(160,100,255,.18), transparent 20%)}
     .event-golden{background:radial-gradient(circle at 50% 20%, rgba(255,220,90,.30), transparent 24%),radial-gradient(circle at 30% 75%, rgba(255,220,90,.12), transparent 18%)}
 
-    .click-label{position:absolute;top:18px;text-align:center;z-index:2}
-    .click-label .name{font-size:36px;font-weight:bold;color:#ffd9a3;text-transform:uppercase}
-    .click-label .sub{font-size:14px;color:var(--muted)}
+    .click-label{
+      position:absolute;
+      top:88px;
+      left:50%;
+      transform:translateX(-50%);
+      text-align:center;
+      z-index:12;
+      background:rgba(22,16,13,.86);
+      border:2px solid var(--border);
+      border-radius:16px;
+      padding:12px 24px;
+      box-shadow:0 8px 24px var(--shadow);
+      backdrop-filter:blur(3px);
+      pointer-events:none;
+    }
+    .click-label .name{font-size:40px;font-weight:bold;color:#ffd9a3;text-transform:uppercase}
+    .click-label .sub{font-size:15px;color:#f0d9b6}
+
+    .mouse-worker{
+      position:absolute;
+      left:calc(50% - min(34vw, 330px));
+      top:calc(50% + 210px);
+      width:190px;
+      height:190px;
+      z-index:4;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      display:none;
+      filter:drop-shadow(0 10px 16px rgba(0,0,0,.65));
+    }
+    .mouse-worker.show{display:block}
+    .mouse-worker img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .mouse-count{
+      position:absolute;
+      left:50%;
+      bottom:-6px;
+      transform:translateX(-50%);
+      min-width:52px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      background:rgba(24,18,16,.88);
+      color:#ffd9a3;
+      font-weight:bold;
+      font-size:15px;
+      text-align:center;
+      box-shadow:0 6px 14px var(--shadow);
+    }
+
+
+    .mouse-bubble{
+      position:absolute;
+      left:50%;
+      top:-48px;
+      transform:translateX(-50%) translateY(6px);
+      min-width:190px;
+      max-width:280px;
+      padding:10px 13px;
+      border-radius:14px;
+      border:2px solid var(--border);
+      background:rgba(22,16,13,.94);
+      color:#ffe8c3;
+      font-size:14px;
+      line-height:1.25;
+      text-align:center;
+      box-shadow:0 8px 20px rgba(0,0,0,.45);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:6;
+    }
+    .mouse-bubble.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    .mouse-bubble::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      transform:translateX(-50%) rotate(45deg);
+      width:16px;
+      height:16px;
+      background:rgba(22,16,13,.94);
+      border-right:2px solid var(--border);
+      border-bottom:2px solid var(--border);
+    }
+
+    .raven-worker{
+      position:absolute;
+      left:calc(50% + min(31vw, 305px));
+      top:calc(50% - 135px);
+      width:220px;
+      height:220px;
+      z-index:5;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      display:none;
+      filter:drop-shadow(0 12px 18px rgba(0,0,0,.72));
+    }
+    .raven-worker.show{display:block}
+    .raven-worker img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .raven-count{
+      position:absolute;
+      left:50%;
+      bottom:4px;
+      transform:translateX(-50%);
+      min-width:52px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:2px solid var(--border);
+      background:rgba(24,18,16,.88);
+      color:#ffd9a3;
+      font-weight:bold;
+      font-size:15px;
+      text-align:center;
+      box-shadow:0 6px 14px var(--shadow);
+    }
+    .raven-bubble{
+      position:absolute;
+      left:50%;
+      top:-42px;
+      transform:translateX(-50%) translateY(6px);
+      min-width:200px;
+      max-width:295px;
+      padding:10px 13px;
+      border-radius:14px;
+      border:2px solid var(--border);
+      background:rgba(17,14,14,.94);
+      color:#f4e4ff;
+      font-size:14px;
+      line-height:1.25;
+      text-align:center;
+      box-shadow:0 8px 20px rgba(0,0,0,.45);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:7;
+    }
+    .raven-bubble.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    .raven-bubble::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      transform:translateX(-50%) rotate(45deg);
+      width:16px;
+      height:16px;
+      background:rgba(17,14,14,.94);
+      border-right:2px solid var(--border);
+      border-bottom:2px solid var(--border);
+    }
 
     .resource-button{
-  width:min(72vw, 560px);
-  height:min(72vw, 560px);
-  max-width:560px;
-  max-height:560px;
-  min-width:300px;
-  min-height:300px;
+  width:min(92vw, 874px);
+  height:min(92vw, 874px);
+  max-width:874px;
+  max-height:874px;
+  min-width:468px;
+  min-height:468px;
   border:none;
   border-radius:0;
   background:none;
@@ -196,9 +360,10 @@
   justify-content:center;
   cursor:pointer;
   position:relative;
-  z-index:2;
+  z-index:3;
   user-select:none;
   overflow:visible;
+  transform:translateY(58px);
   transition:transform .08s ease, filter .15s ease;
 }
 .resource-img{
@@ -210,15 +375,29 @@
   filter:drop-shadow(0 10px 20px rgba(0,0,0,0.45));
 }
 .resource-button:hover{filter:brightness(1.05)}
-.resource-button:active{transform:scale(.96)}
+.resource-button:active{transform:translateY(58px) scale(.96)}
 .resource-button.stone{background:none}
 .resource-button.iron{background:none}
 
-    .click-power{margin-top:18px;z-index:2;text-align:center;font-size:18px}
+    .click-power{
+      position:absolute;
+      bottom:38px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:8;
+      text-align:center;
+      font-size:20px;
+      background:rgba(22,16,13,.82);
+      border:2px solid var(--border);
+      border-radius:14px;
+      padding:8px 18px;
+      box-shadow:0 8px 18px var(--shadow);
+      pointer-events:none;
+    }
     .event-indicator{
       position:absolute;
-      right:16px;
-      top:16px;
+      right:24px;
+      top:24px;
       z-index:3;
       min-width:86px;
       border-radius:12px;
@@ -233,19 +412,28 @@
     .event-indicator .name{font-size:12px;color:var(--muted);margin-top:4px}
 
     .workers{
-      background:linear-gradient(180deg, var(--panel), var(--panel-3));
-      border:2px solid var(--border);
-      border-radius:18px;
-      padding:12px;
-      overflow:auto;
-      box-shadow:0 8px 20px var(--shadow);
+      position:absolute;
+      right:24px;
+      top:92px;
+      width:min(390px, calc(100vw - 48px));
+      max-height:calc(100vh - 112px);
+      background:transparent;
+      border:none;
+      border-radius:0;
+      padding:0;
+      overflow:visible;
+      box-shadow:none;
+      z-index:9;
     }
+    .workers > .panel{display:none;}
 .secretary{
-  background:linear-gradient(180deg, #32241d, #201713);
+  background:linear-gradient(180deg, rgba(50,36,29,.93), rgba(32,23,19,.93));
   border:2px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:12px;
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:0;
+  box-shadow:0 12px 30px rgba(0,0,0,.45);
+  backdrop-filter:blur(3px);
 }
 .secretary-head{
   display:flex;
@@ -255,8 +443,8 @@
   margin-bottom:10px;
 }
 .secretary-icon{
-  width:170px;
-  height:170px;
+  width:240px;
+  height:240px;
   border-radius:16px;
   display:flex;
   align-items:center;
@@ -290,8 +478,8 @@
 
 @media (max-width: 760px){
   .secretary-icon{
-    width:120px;
-    height:120px;
+    width:150px;
+    height:150px;
   }
 }
 
@@ -407,27 +595,32 @@
     .skill-tree-lines{position:absolute;inset:0;pointer-events:none}
 
     @media (max-width: 980px){
-      .content{grid-template-columns:1fr}
-      .workers{max-height:34vh}
+      .workers{right:14px;top:92px;width:min(340px, calc(100vw - 28px));}
+      .secretary-icon{width:190px;height:190px;}
     }
     @media (max-width: 760px){
       .sidebar{width:290px;min-width:290px}
-      .sidebar.collapsed{transform:translateX(-254px)}
+      .sidebar.collapsed{transform:translateX(-100%)}
       .sidebar-toggle{left:290px}
-      .sidebar.collapsed + .sidebar-toggle{left:36px}
+      .sidebar.collapsed + .sidebar-toggle{left:0}
       .topbar{flex-wrap:wrap}
       .top-stat{min-width:calc(50% - 5px)}
       .topbar-actions{width:100%}
       .topbar-actions button{flex:1}
       .click-label .name{font-size:28px}
-      .resource-button{min-width:210px;min-height:210px;font-size:90px}
+      .resource-button{min-width:300px;min-height:300px;width:min(96vw,620px);height:min(96vw,620px);font-size:90px}
+      .mouse-worker{left:calc(50% - 180px);top:calc(50% + 160px);width:130px;height:130px}
+      .raven-worker{left:calc(50% + 175px);top:calc(50% - 85px);width:145px;height:145px}
+      .click-label{top:82px;padding:9px 14px;}
+      .click-label .name{font-size:28px;}
+      .workers{width:min(300px, calc(100vw - 24px));right:12px;top:150px;}
       .skill-tree{grid-template-columns:repeat(3, minmax(90px, 1fr));grid-auto-rows:92px}
       .modal-grid{grid-template-columns:1fr}
     }
       .music-control{
       position:absolute;
-      top:10px;
-      right:10px;
+      right:18px;
+      bottom:18px;
       z-index:100;
     }
 
@@ -535,6 +728,18 @@
           <div class="event-indicator hidden" id="eventIndicator">
             <div class="icon" id="eventIndicatorIcon"></div>
             <div class="name" id="eventIndicatorName"></div>
+          </div>
+
+          <div class="mouse-worker" id="mouseWorker">
+            <div class="mouse-bubble" id="mouseBubble"></div>
+            <img src="assets/mouse_1.png" alt="Mysz pracująca przy drzewie" id="mouseWorkerImg">
+            <div class="mouse-count" id="mouseWorkerCount">x1</div>
+          </div>
+
+          <div class="raven-worker" id="ravenWorker">
+            <div class="raven-bubble" id="ravenBubble"></div>
+            <img src="assets/raven_1.png" alt="Wrona dziobiąca drewno" id="ravenWorkerImg">
+            <div class="raven-count" id="ravenWorkerCount">x1</div>
           </div>
 
           <div class="resource-button wood" id="resourceButton">
@@ -711,6 +916,34 @@
       "To nie wyzysk. To bardzo intensywna współpraca."
     ];
 
+
+
+    const MOUSE_BUBBLE_LINES = [
+      "Squeek... ktoś mnie awansował bez głowy...",
+      "Pi pi... dział HR to tylko stos kości...",
+      "Chrr... czuję jak KPI mnie obserwuje...",
+      "Squeee... czy ja właśnie gryzę własną umowę?",
+      "Piik... ten budynek oddycha... chyba...",
+      "Chrup... ser smakuje jak raport kwartalny...",
+      "Squeek... ktoś dodał mnie do Excela żywych...",
+      "Pi pi pi... czasem zapominam że nie żyję...",
+      "Chrr... wczoraj zjadłem menedżera... dalej zarządza...",
+      "Squeeeek... to drzewo szepcze o premiach..."
+    ];
+
+    const RAVEN_BUBBLE_LINES = [
+      "Kra... raport zniszczony. Przypadek.",
+      "Kraa... widziałem twoje KPI. Śmieszne.",
+      "Krr... obserwuję upadek tej firmy z góry.",
+      "Kraaa... ktoś tu zarządza? Nie widać.",
+      "Krrr... dziobię bo mogę. I bo płacą duszami.",
+      "Kra... premia? Zjadłem ją.",
+      "Krr... martwi pracują lepiej. Mniej narzekają.",
+      "Kraaa... wszystko się wali. Idealnie.",
+      "Krrr... jestem tu dla chaosu i okruszków.",
+      "Kra... drewno krzyczy. Lubię to."
+    ];
+
     const EVENTS = {
       micePlague: {
         key: "micePlague",
@@ -842,6 +1075,14 @@
       centerName: document.getElementById("centerName"),
       centerClickPower: document.getElementById("centerClickPower"),
       resourceButton: document.getElementById("resourceButton"),
+      mouseWorker: document.getElementById("mouseWorker"),
+      mouseWorkerImg: document.getElementById("mouseWorkerImg"),
+      mouseWorkerCount: document.getElementById("mouseWorkerCount"),
+      mouseBubble: document.getElementById("mouseBubble"),
+      ravenWorker: document.getElementById("ravenWorker"),
+      ravenWorkerImg: document.getElementById("ravenWorkerImg"),
+      ravenWorkerCount: document.getElementById("ravenWorkerCount"),
+      ravenBubble: document.getElementById("ravenBubble"),
       clickArea: document.getElementById("clickArea"),
       speechBox: document.getElementById("speechBox"),
       adBoostBtn: document.getElementById("adBoostBtn"),
@@ -1116,6 +1357,7 @@
         btn.className = "unit-btn";
         btn.type = "button";
         btn.dataset.unitKey = def.key;
+        btn.dataset.unitIndex = String(UNIT_DEFS.indexOf(def));
         btn.innerHTML = `
           <div class="btn-title">${def.icon} ${def.name} (<span class="owned">${owned}</span>)</div>
           <div class="btn-desc">${def.desc}</div>
@@ -1132,7 +1374,7 @@
       const state = getCurrentState();
       const buttons = el.unitsList.querySelectorAll(".unit-btn");
       buttons.forEach(btn => {
-        const def = UNIT_DEFS.find(u => u.key === btn.dataset.unitKey);
+        const def = UNIT_DEFS[Number(btn.dataset.unitIndex)];
         const owned = state.units[def.key].owned;
         const milestone = getMilestoneMultiplier(owned);
         const cost = getUnitCost(def.key, owned);
@@ -1188,6 +1430,128 @@
       }
     }
 
+    function updateMouseWorker() {
+      const state = getCurrentState();
+      const owned = state.units.mouse?.owned || 0;
+      const shouldShow = owned > 0 && game.currentResource === "wood";
+      el.mouseWorker.classList.toggle("show", shouldShow);
+      el.mouseWorkerCount.textContent = `x${owned}`;
+      if (!shouldShow) {
+        el.mouseBubble.classList.remove("show");
+        el.mouseBubble.textContent = "";
+      }
+    }
+
+    let mouseBubbleTimeout = null;
+    let mouseBubbleTypeInterval = null;
+
+    function hasVisibleMouseWorker() {
+      const state = game.resources.wood;
+      return game.currentResource === "wood" && (state.units.mouse?.owned || 0) > 0;
+    }
+
+    function getRandomMouseBubbleDelay() {
+      return 30000 + Math.floor(Math.random() * 30001);
+    }
+
+    function scheduleNextMouseBubble() {
+      clearTimeout(mouseBubbleTimeout);
+      mouseBubbleTimeout = setTimeout(() => {
+        showMouseBubble();
+      }, getRandomMouseBubbleDelay());
+    }
+
+    function showMouseBubble() {
+      clearInterval(mouseBubbleTypeInterval);
+
+      if (!hasVisibleMouseWorker()) {
+        el.mouseBubble.classList.remove("show");
+        el.mouseBubble.textContent = "";
+        scheduleNextMouseBubble();
+        return;
+      }
+
+      const text = MOUSE_BUBBLE_LINES[Math.floor(Math.random() * MOUSE_BUBBLE_LINES.length)];
+      let index = 0;
+      el.mouseBubble.textContent = "";
+      el.mouseBubble.classList.add("show");
+
+      mouseBubbleTypeInterval = setInterval(() => {
+        index += 1;
+        el.mouseBubble.textContent = text.slice(0, index);
+
+        if (index >= text.length) {
+          clearInterval(mouseBubbleTypeInterval);
+          setTimeout(() => {
+            el.mouseBubble.classList.remove("show");
+            el.mouseBubble.textContent = "";
+            scheduleNextMouseBubble();
+          }, 650);
+        }
+      }, 45);
+    }
+
+    function updateRavenWorker() {
+      const state = getCurrentState();
+      const owned = state.units.crow?.owned || 0;
+      const shouldShow = owned > 0 && game.currentResource === "wood";
+      el.ravenWorker.classList.toggle("show", shouldShow);
+      el.ravenWorkerCount.textContent = `x${owned}`;
+      if (!shouldShow) {
+        el.ravenBubble.classList.remove("show");
+        el.ravenBubble.textContent = "";
+      }
+    }
+
+    let ravenBubbleTimeout = null;
+    let ravenBubbleTypeInterval = null;
+
+    function hasVisibleRavenWorker() {
+      const state = game.resources.wood;
+      return game.currentResource === "wood" && (state.units.crow?.owned || 0) > 0;
+    }
+
+    function getRandomRavenBubbleDelay() {
+      return 30000 + Math.floor(Math.random() * 30001);
+    }
+
+    function scheduleNextRavenBubble() {
+      clearTimeout(ravenBubbleTimeout);
+      ravenBubbleTimeout = setTimeout(() => {
+        showRavenBubble();
+      }, getRandomRavenBubbleDelay());
+    }
+
+    function showRavenBubble() {
+      clearInterval(ravenBubbleTypeInterval);
+
+      if (!hasVisibleRavenWorker()) {
+        el.ravenBubble.classList.remove("show");
+        el.ravenBubble.textContent = "";
+        scheduleNextRavenBubble();
+        return;
+      }
+
+      const text = RAVEN_BUBBLE_LINES[Math.floor(Math.random() * RAVEN_BUBBLE_LINES.length)];
+      let index = 0;
+      el.ravenBubble.textContent = "";
+      el.ravenBubble.classList.add("show");
+
+      ravenBubbleTypeInterval = setInterval(() => {
+        index += 1;
+        el.ravenBubble.textContent = text.slice(0, index);
+
+        if (index >= text.length) {
+          clearInterval(ravenBubbleTypeInterval);
+          setTimeout(() => {
+            el.ravenBubble.classList.remove("show");
+            el.ravenBubble.textContent = "";
+            scheduleNextRavenBubble();
+          }, 650);
+        }
+      }, 45);
+    }
+
     function refreshAllUI() {
       const def = RESOURCE_DEFS[game.currentResource];
       const state = getCurrentState();
@@ -1211,10 +1575,11 @@
       el.resourceButton.classList.remove("wood","stone","iron");
       el.resourceButton.classList.add(def.key);
       updateResourceButtons();
-      refreshUnitsValues();
       updateBoostTimer();
       updateResetButton();
       updateEventIndicator();
+      updateMouseWorker();
+      updateRavenWorker();
       el.sidebar.classList.toggle("collapsed", game.sidebarCollapsed);
       el.sidebarToggle.textContent = game.sidebarCollapsed ? "▶" : "◀";
     }
@@ -1488,11 +1853,37 @@
     renderUnitsList();
     refreshAllUI();
     if (game.skillTreeOpenForCurrentRun) openSkillTreeAfterReset();
+    scheduleNextMouseBubble();
+    scheduleNextRavenBubble();
 
+    let mouseAnimFrame = 1;
+    setInterval(() => {
+      if (!el.mouseWorker.classList.contains("show")) return;
+      mouseAnimFrame = mouseAnimFrame === 1 ? 2 : 1;
+      el.mouseWorkerImg.src = `assets/mouse_${mouseAnimFrame}.png`;
+    }, 420);
+
+    let ravenAnimFrame = 1;
+    setInterval(() => {
+      if (!el.ravenWorker.classList.contains("show")) return;
+      ravenAnimFrame = ravenAnimFrame === 1 ? 2 : 1;
+      el.ravenWorkerImg.src = `assets/raven_${ravenAnimFrame}.png`;
+    }, 460);
+
+    // LOGIKA GRY: liczenie produkcji zostaje płynne
     setInterval(() => {
       tick(0.1);
-      refreshAllUI();
     }, 100);
+
+    // UI: odświeżamy rzadziej, żeby nie mielić DOM-u 10 razy na sekundę
+    setInterval(() => {
+      refreshAllUI();
+    }, 250);
+
+    // Lista jednostek jest najcięższa, więc aktualizuje się osobno
+    setInterval(() => {
+      refreshUnitsValues();
+    }, 500);
 
     setInterval(() => rotateSecretaryLine(), 8000);
     setInterval(() => saveGame(true), 5000);
